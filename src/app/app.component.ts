@@ -86,6 +86,7 @@ export class AppComponent {
       }
     };
   }
+
   @HostListener('window:beforeinstallprompt', ['$event'])
   onbeforeinstallprompt(e) {
     e.preventDefault();

@@ -76,7 +76,7 @@
       </div>
     </section>
     <section mdcToolbarSection alignEnd>
-      <a mdcToolbarIcon class="material-icons" href="/homescreen" aria-label="Add to home screen"
+      <a mdcToolbarIcon class="material-icons" (click)="addToHomeScreen()" aria-label="Add to home screen"
         alt="Add to home screen">add</a>
       <a mdcToolbarIcon class="material-icons" *ngIf="nav.share" aria-label="Share" alt="Share"
         (click)="doShare()">share</a>

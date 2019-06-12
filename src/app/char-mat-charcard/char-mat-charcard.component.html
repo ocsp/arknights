@@ -10,24 +10,38 @@
         <button mdcButton class="btnTitle">精英化</button>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onEvolveClick(false,false)" [attr.disabled]="data.ce>0?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.ce">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
-        <button mdcButton dense (click)="onEvolveClick(false,true)" [attr.disabled]="data.ce>=limits.maxEvolve?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onEvolveClick(false,false)" [attr.disabled]="data.ce>0?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.ce">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onEvolveClick(false,true)"
+            [attr.disabled]="data.ce>=limits.maxEvolve?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onEvolveClick(true,false)" [attr.disabled]="data.te>0?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.te">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
-        <button mdcButton dense (click)="onEvolveClick(true,true)" [attr.disabled]="data.te>=limits.maxEvolve?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onEvolveClick(true,false)" [attr.disabled]="data.te>0?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.te">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onEvolveClick(true,true)"
+            [attr.disabled]="data.te>=limits.maxEvolve?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
     </div>
     <div fxFlex="50" fxFlex.gt-md="33" fxLayout="row" fxLayoutAlign="space-between center">
@@ -36,50 +50,77 @@
         <button mdcButton class="btnTitle">全技能</button>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onSkillClick(false,false)" [attr.disabled]="data.cs>1?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.cs">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
-        <button mdcButton dense (click)="onSkillClick(false,true)" [attr.disabled]="data.cs>=limits.maxSkill?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onSkillClick(false,false)" [attr.disabled]="data.cs>1?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.cs">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onSkillClick(false,true)" [attr.disabled]="data.cs>=limits.maxSkill?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onSkillClick(true,false)" [attr.disabled]="data.ts>1?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.ts">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
-        <button mdcButton dense (click)="onSkillClick(true,true)" [attr.disabled]="data.ts>=limits.maxSkill?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onSkillClick(true,false)" [attr.disabled]="data.ts>1?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.ts">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onSkillClick(true,true)" [attr.disabled]="data.ts>=limits.maxSkill?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
     </div>
-    <div fxFlex="50" fxFlex.gt-md="33" fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let idx of data.specials">
+    <div fxFlex="50" fxFlex.gt-md="33" fxLayout="row" fxLayoutAlign="space-between center"
+      *ngFor="let idx of data.specials">
       <!-- 专精技能 -->
       <div mdcFormField>
         <button mdcButton class="btnTitle">{{char.sskillCosts[idx].skillName}}</button>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onSpecialClick(idx,false,false)" [attr.disabled]="data.css[idx]>0?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.css[idx]">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
-        <button mdcButton dense (click)="onSpecialClick(idx,false,true)" [attr.disabled]="data.css[idx]>=limits.maxSpecial[idx]?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onSpecialClick(idx,false,false)" [attr.disabled]="data.css[idx]>0?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.css[idx]">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onSpecialClick(idx,false,true)"
+            [attr.disabled]="data.css[idx]>=limits.maxSpecial[idx]?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
       <div mdcTextField dense class="input-field">
-        <button mdcButton dense (click)="onSpecialClick(idx,true,false)" [attr.disabled]="data.tss[idx]>0?null:''">
-          <i mdcButtonIcon class="material-icons">remove</i>
-        </button>
-        <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.tss[idx]">
-        <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
-        <button mdcButton dense (click)="onSpecialClick(idx,true,true)" [attr.disabled]="data.tss[idx]>=limits.maxSpecial[idx]?'':null">
-          <i mdcButtonIcon class="material-icons">add</i>
-        </button>
+        <span>
+          <button mdcButton dense (click)="onSpecialClick(idx,true,false)" [attr.disabled]="data.tss[idx]>0?null:''">
+            <i mdcButtonIcon class="material-icons">remove</i>
+          </button>
+        </span>
+        <span>
+          <input mdcTextFieldInput #input1="ngModel" type="number" (change)="onInputChange()" [(ngModel)]="data.tss[idx]">
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
+        </span>
+        <span>
+          <button mdcButton dense (click)="onSpecialClick(idx,true,true)"
+            [attr.disabled]="data.tss[idx]>=limits.maxSpecial[idx]?'':null">
+            <i mdcButtonIcon class="material-icons">add</i>
+          </button>
+        </span>
       </div>
     </div>
   </div>

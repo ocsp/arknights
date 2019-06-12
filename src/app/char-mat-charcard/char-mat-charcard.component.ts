@@ -38,7 +38,7 @@ export class CharMatCharcardComponent implements OnInit {
     this.fetch.setLocalStorage('cm-' + this.char.name, this.data);
   }
   ngOnInit() {
-    console.log(this.char.evolveCosts.length);
+    // console.log(this.char.evolveCosts.length);
     this.limits.maxSkill = this.char.askillCosts.length + 1;
     this.limits.maxEvolve = this.char.evolveCosts.length - 1;
     const cml = this.fetch.getLocalStorage('cm-' + this.char.name, {
@@ -56,7 +56,7 @@ export class CharMatCharcardComponent implements OnInit {
       for (let i = 0; i < specialCount; i++) {
         const maxSpecial = this.char.sskillCosts[i].levelUpCost.length;
         this.data.css.push(cml.css.length > i ? cml.css[i] : 0);
-        this.data.tss.push(cml.tss.length > i ? cml.tss[i] : maxSpecial);
+        this.data.tss.push(cml.tss.length > i ? cml.tss[i] : 0);  // 专精技能并不会全部强化，因此取消默认最大。
         this.limits.maxSpecial.push(maxSpecial);
         this.data.specials.push(i);
       }
