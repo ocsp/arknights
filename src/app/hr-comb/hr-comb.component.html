@@ -1,14 +1,46 @@
-<div mdcCard *ngFor="let comb of hrcombs; trackBy: trackComb">
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <div>
-    <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
-  </div>
-  <div fxShow.lt-sm="false">
-    <div mdcChip raised>{{comb.score| number : '1.2-2'}}</div>
-  </div>
-  </div>
-  <hr mdcListDivider>
-  <div >
-      <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}" [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
-  </div>
+<div><button mdcButton raised [ngClass]="'option-'+option" id="btnOption" (click)="toggleOption()">切换TAG位置</button>
 </div>
+
+<ng-container *ngIf="option===0">
+  <div mdcCard *ngFor="let comb of hrcombs; trackBy: trackComb">
+    <div fxLayout="row" fxLayoutAlign="space-between center" [ngClass]="{'gap-row': true}">
+      <div class="p-25">
+        <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
+      </div>
+      <div fxShow.lt-sm="false">
+        <div mdcChip raised>{{comb.score| number : '1.2-2'}}</div>
+      </div>
+    </div>
+    <hr mdcListDivider>
+    <div class="p-25">
+      <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}"
+        [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="option===1">
+  <div mdcCard *ngFor="let comb of hrcombs; trackBy: trackComb">
+    <div class="p-25">
+      <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
+      <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}"
+        [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="option===2">
+  <div class="table-container">
+    <table>
+      <tr *ngFor="let comb of hrcombs; trackBy: trackComb; let even=even" [ngClass]="{'gap-row': even}">
+        <td>
+          <button mdcButton raised class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
+        </td>
+        <td>
+          <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}"
+            [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</ng-container>

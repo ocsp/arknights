@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HrComb } from '../model/hrcomb';
+import { FetchService } from '../fetch.service';
 
 @Component({
   selector: 'app-hr-comb',
@@ -8,8 +9,9 @@ import { HrComb } from '../model/hrcomb';
 })
 export class HrCombComponent implements OnInit {
   @Input() hrcombs: Array<HrComb>;
-  constructor() { }
+  constructor(private fetch: FetchService) { }
   @Input() charSelected: '';
+  option = 0;
 
   @Output() reportCharClick = new EventEmitter<string>();
 
@@ -25,6 +27,12 @@ export class HrCombComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.option = this.fetch.getLocalStorage('hrcb-opt', 0);
+  }
+
+  toggleOption() {
+    this.option = (this.option + 1) % 3;
+    this.fetch.setLocalStorage('hrcb-opt',this.option);
   }
 
 }

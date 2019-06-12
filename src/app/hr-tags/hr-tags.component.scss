@@ -1,8 +1,19 @@
 @import "../styles/custom.scss";
 
-.btnTitle {
+.mdc-button {
+  padding: 0em 0.5em;
+  min-width: 0px;
+  min-height: 0px;
+  height: 32px;
+}
+
+.mdc-button--outlined:not(.mdc-button--raised){
+  background-color: #fff;
+}
+
+.mdc-button.btnTitle {
   background-color: $mdc-theme-secondary;
-  color: white;
+  color: transparent;
 }
 
 .no-padding {
@@ -36,4 +47,8 @@
   padding: 0 0.25em;
   min-width: 40px;
   margin: 0px;
+}
+
+.even-row {
+  background-color: $highlight-background;
 }
