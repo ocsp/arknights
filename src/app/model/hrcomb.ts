@@ -1,6 +1,6 @@
-export class HrComb{
-    tags:[];
-    possible:[];
-    score:number;
-    id:string;
+export class HrComb {
+    tags: Array<any> = [];
+    possible: Array<any> = [];
+    score: number;
+    id: string;
 }

@@ -9,6 +9,6 @@
   </div>
   <hr mdcListDivider>
   <div >
-      <button mdcButton raised [ngClass]="'char-lvl-'+char.level" *ngFor="let char of comb.possible">{{char.name}}</button>
+      <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}" [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
   </div>
 </div>

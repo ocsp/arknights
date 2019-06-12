@@ -6,6 +6,6 @@
     </div>
   </div>
   <div fxFlex="100%" fxFlex.gt-md="60%" fxFlexOffset.gt-md="40%">
-    <app-hr-comb [hrcombs]="hrdata.combs"></app-hr-comb>
+    <app-hr-comb [hrcombs]="hrdata.combs" [charSelected]="charSelected" (reportCharClick)="showCharTags($event)"></app-hr-comb>
   </div>
 </div>

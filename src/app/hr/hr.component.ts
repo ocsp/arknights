@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HrData } from '../model/hrdata';
 import { HrComb } from '../model/hrcomb';
 import { FetchService } from '../fetch.service';
+import { MdcSnackbarService } from '@blox/material';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class HrComponent implements OnInit {
   chars: {};
   selectedTags: Array<string> = [];
   selectedStars: Array<number> = [1, 2, 3, 4, 5, 6];
+  charSelected = '';
 
   onSelectTagChanged(selected: Array<string>): void {
     this.selectedTags = selected;
@@ -28,7 +30,7 @@ export class HrComponent implements OnInit {
     this.calculateCombs();
   }
 
-  constructor(private fetch: FetchService) { }
+  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService) { }
 
   ngOnInit() {
     this.hrdata = new HrData();
@@ -135,5 +137,31 @@ export class HrComponent implements OnInit {
     });
     this.hrdata.combs = combs.filter(c => c.possible.length > 0);
   }
-
+  showCharTags(name: string) {
+    if (this.hrdata.combsBk.length === 0) {
+      this.snackbar.show({
+        message: (name + ': ' + this.chars[name].tags.join(', ')),
+        actionText: '关闭',
+        multiline: true,
+        actionOnBottom: true,
+        timeout: 10000
+      });
+      this.hrdata.combsBk = [...this.hrdata.combs];
+      const newCb = [];
+      for (const c of this.hrdata.combs) {
+        for (const ch of c.possible) {
+          if (ch.name === name) {
+            this.charSelected = name;
+            newCb.push(c);
+            continue;
+          }
+        }
+      }
+      this.hrdata.combs = newCb;
+    } else {
+      this.hrdata.combs = [...this.hrdata.combsBk];
+      this.hrdata.combsBk = [];
+      this.charSelected = '';
+    }
+  }
 }

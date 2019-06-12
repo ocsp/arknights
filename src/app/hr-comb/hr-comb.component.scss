@@ -6,31 +6,36 @@
 }
 
 .char-lvl-5 {
-  background-color: #F9CE8C;
-  color: #1A1D1E;
+  background-color: #f9ce8c;
+  color: #1a1d1e;
 }
 
 .char-lvl-4 {
-  background-color: #589BAD;
+  background-color: #589bad;
   color: white;
 }
 
 .char-lvl-3 {
-  background-color: #7EBC59;
+  background-color: #7ebc59;
   color: white;
 }
 
 .char-lvl-2 {
-  background-color: #C3E3E5;
-  color: #1A1D1E;
+  background-color: #c3e3e5;
+  color: #1a1d1e;
 }
 
 .char-lvl-1 {
-  background-color: #1A1D1E;
+  background-color: #1a1d1e;
   color: white;
 }
 
-table{
+.char-hl {
+  background-color: $mdc-theme-primary;
+  color: white;
+}
+
+table {
   width: 100%;
 }
 th {
