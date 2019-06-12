@@ -3,7 +3,8 @@
     <div fxFlex="26">
       <div mdcSelect class="input-field">
         <select mdcSelectControl [(ngModel)]="star" (change)="onFilterChange()">
-          <option value="6" selected>6★</option>
+          <option value="0" selected>全部</option>
+          <option value="6">6★</option>
           <option value="5">5★</option>
           <option value="4">4★</option>
           <option value="3">3★</option>
@@ -16,7 +17,8 @@
     <div fxFlex="26">
       <div mdcSelect class="input-field">
         <select mdcSelectControl [(ngModel)]="prof" (change)="onFilterChange()">
-          <option value="辅助" selected>辅助</option>
+          <option value="全部" selected>全部</option>
+          <option value="辅助">辅助</option>
           <option value="近卫">近卫</option>
           <option value="先锋">先锋</option>
           <option value="特种">特种</option>
@@ -36,7 +38,7 @@
         <label mdcFloatingLabel class="mdc-floating-label--float-above">干员</label>
       </div>
     </div>
-    <div fxFlex="10">
+    <div>
       <div mdcInputField>
         <button mdcIconButton class="material-icons" (click)="onCharAdd()">add</button>
       </div>

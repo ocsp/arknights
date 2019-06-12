@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FetchService } from '../fetch.service';
 import { MaterialItem } from '../model/materialitem';
+import { MdcSnackbarService } from '@blox/material';
 
 @Component({
   selector: 'app-char-mat',
@@ -16,23 +17,25 @@ export class CharMatComponent implements OnInit, AfterViewChecked {
   mats: { [key: string]: MaterialItem };
   joindChars = [];
   star = 6;
-  prof = '辅助';
+  prof = '全部';
   char = '';
   selectedChars = [];
   rawMat = {};
   summarizedMats: Array<any>;
-  constructor(private fetch: FetchService, private cdRef: ChangeDetectorRef) { }
+  constructor(private fetch: FetchService, private cdRef: ChangeDetectorRef, private snackbar: MdcSnackbarService) { }
 
 
   ngOnInit() {
     this.fetch.getJson('./assets/data/charMaterials.json').subscribe(data => {
       this.cmMap = data;
       this.chars = Object.keys(data);
-      const cbs = [[], [], [], [], [], []];
-      const cbp = { 医疗: [], 近卫: [], 先锋: [], 重装: [], 狙击: [], 术师: [], 辅助: [], 特种: [], 其它: [] };
+      const cbs = [[], [], [], [], [], [], []];
+      const cbp = { 医疗: [], 近卫: [], 先锋: [], 重装: [], 狙击: [], 术师: [], 辅助: [], 特种: [], 全部: [], 其它: [] };
       for (const chn in data) {
         if (data[chn] && data[chn].profession !== '其它') {
-          cbs[+data[chn].rarity].push(chn);
+          cbs[0].push(chn);
+          cbp.全部.push(chn);
+          cbs[+data[chn].rarity + 1].push(chn);
           cbp[data[chn].profession].push(chn);
         }
       }
@@ -54,7 +57,7 @@ export class CharMatComponent implements OnInit, AfterViewChecked {
     });
   }
   onFilterChange() {
-    const cs = this.charByStar[this.star - 1];
+    const cs = this.charByStar[this.star];
     const cp = this.charByProf[this.prof];
     // 在已排好序的前提下求交集，时间复杂度n+m
     const joind = [];
@@ -76,9 +79,16 @@ export class CharMatComponent implements OnInit, AfterViewChecked {
   }
   onCharAdd() {
     if (!this.selectedChars.includes(this.char)) {
-      this.selectedChars.push(this.char);
+      this.selectedChars.unshift(this.char);
+      this.fetch.setLocalStorage('cm-chars', this.selectedChars);
+    } else {
+      this.snackbar.show({
+        message: '干员已存在。',
+        actionText: '好的',
+        multiline: false,
+        actionOnBottom: false
+      });
     }
-    this.fetch.setLocalStorage('cm-chars', this.selectedChars);
   }
   onCharRemove(name: string) {
     const index = this.selectedChars.indexOf(name, 0);
