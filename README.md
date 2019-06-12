@@ -1,27 +1,23 @@
-# Aktools
+# 明日方舟工具箱
+### 一只灰猫
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.1.
+## 部署
+目前已部署在Github Pages：[明日方舟工具箱 by 一只灰猫](https://aktools.graueneko.xyz/)
 
-## Development server
+## 开发
+```bash
+git clone https://github.com/graueneko/aktools.git
+cd aktools
+npm i -s
+ng serve -o
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+参与开发您可能需要以下文档：
+1. [Angular 中文文档](https://angular.cn/guide/forms)
+2. [Blox Material Components](https://blox.src.zone/material/components)
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## 构建
+```
+ng build --prod
+```
+将生成在./dist/aktools目录下。
