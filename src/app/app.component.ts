@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MdcSnackbarService } from '@blox/material';
 import { SwUpdate } from '@angular/service-worker';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +11,10 @@ import { SwUpdate } from '@angular/service-worker';
 export class AppComponent {
   title = '明日方舟工具箱 by 一只灰猫';
   drawerOpen = false;
-  temporary = 'temporary';
+  deferredPrompt: any;
   baseUrl: string;
   nav: any;
+  temporary = 'temporary';
 
   dialog = {
     title: '提示',
@@ -36,7 +38,7 @@ export class AppComponent {
     });
   }
 
-  constructor(private snackBar: MdcSnackbarService, private swUpdate: SwUpdate) {
+  constructor(private snackBar: MdcSnackbarService, private swUpdate: SwUpdate, private router: Router) {
     this.baseUrl = window.location.origin;
     this.nav = window.navigator;
     if (this.swUpdate.isEnabled) {
@@ -66,9 +68,6 @@ export class AppComponent {
       });
     }
   }
-  doClear() {
-    localStorage.clear();
-  }
 
   beforeClear() {
     this.dialog = {
@@ -77,7 +76,28 @@ export class AppComponent {
       accept: '好的',
       decline: '不了',
       declineCallback: () => { },
-      acceptCallback: this.doClear
+      acceptCallback: () => {
+        localStorage.clear();
+        const currentUrl = this.router.url;
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigateByUrl(currentUrl);
+        });
+        this.showSnackBar('输入数据已清空', '好的');
+      }
     };
+  }
+  @HostListener('window:beforeinstallprompt', ['$event'])
+  onbeforeinstallprompt(e) {
+    e.preventDefault();
+    this.deferredPrompt = e;
+  }
+
+  addToHomeScreen() {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt = null;
+    } else {
+      this.router.navigateByUrl('/homescreen');
+    }
   }
 }

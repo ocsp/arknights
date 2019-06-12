@@ -21,7 +21,11 @@ export class CharMatCharcardComponent implements OnInit {
     css: [],
     tss: []
   };
-
+  limits = {
+    maxEvolve: 0,
+    maxSkill: 1,
+    maxSpecial: [],
+  };
   emitRemove() {
     this.reportRemove.emit(this.char.name);
   }
@@ -34,20 +38,26 @@ export class CharMatCharcardComponent implements OnInit {
     this.fetch.setLocalStorage('cm-' + this.char.name, this.data);
   }
   ngOnInit() {
+    console.log(this.char.evolveCosts.length);
+    this.limits.maxSkill = this.char.askillCosts.length + 1;
+    this.limits.maxEvolve = this.char.evolveCosts.length - 1;
     const cml = this.fetch.getLocalStorage('cm-' + this.char.name, {
       ce: 0,
-      te: 0,
+      te: this.limits.maxEvolve,
       cs: 1,
-      ts: 1,
+      ts: this.limits.maxSkill,
       specials: [],
       css: [],
       tss: []
     });
+    this.data = cml;
     const specialCount = this.char.sskillCosts.length;
-    if (specialCount !== 0) {
+    if (specialCount !== 0 && this.data.specials.length === 0) {
       for (let i = 0; i < specialCount; i++) {
+        const maxSpecial = this.char.sskillCosts[i].levelUpCost.length;
         this.data.css.push(cml.css.length > i ? cml.css[i] : 0);
-        this.data.tss.push(cml.tss.length > i ? cml.tss[i] : 0);
+        this.data.tss.push(cml.tss.length > i ? cml.tss[i] : maxSpecial);
+        this.limits.maxSpecial.push(maxSpecial);
         this.data.specials.push(i);
       }
     }
@@ -61,6 +71,9 @@ export class CharMatCharcardComponent implements OnInit {
     } else {
       this.data.ce = this.checkFix(this.data.ce + (isAdd ? 1 : -1), 0, maxEvolve);
     }
+    if (this.data.te < this.data.ce) {
+      if (isTarget) { this.data.ce = this.data.te; } else { this.data.te = this.data.ce; }
+    }
     this.calc();
   }
 
@@ -71,6 +84,9 @@ export class CharMatCharcardComponent implements OnInit {
     } else {
       this.data.cs = this.checkFix(this.data.cs + (isAdd ? 1 : -1), 1, maxSkill);
     }
+    if (this.data.ts < this.data.cs) {
+      if (isTarget) { this.data.cs = this.data.ts; } else { this.data.ts = this.data.cs; }
+    }
     this.calc();
   }
 
@@ -80,6 +96,9 @@ export class CharMatCharcardComponent implements OnInit {
       this.data.tss[idx] = this.checkFix(this.data.tss[idx] + (isAdd ? 1 : -1), 0, maxSpecial);
     } else {
       this.data.css[idx] = this.checkFix(this.data.css[idx] + (isAdd ? 1 : -1), 0, maxSpecial);
+    }
+    if (this.data.tss[idx] < this.data.css[idx]) {
+      if (isTarget) { this.data.css[idx] = this.data.tss[idx]; } else { this.data.tss[idx] = this.data.css[idx]; }
     }
     this.calc();
   }
