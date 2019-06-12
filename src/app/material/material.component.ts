@@ -53,7 +53,7 @@ export class MaterialComponent implements OnInit {
       for (let j = this.mByLvl[i].length - 1; j >= 0; j--) {
         const m = this.mIdx[this.mByLvl[i][j]];
         if (counts[m.name].lack === 0) {
-          this.data[m.name].canMerge = false;
+          counts[m.name].canMerge = false;
           continue;
         }
         let maxCompose = Object.keys(m.madeof).length === 0 ? 0 : Number.MAX_SAFE_INTEGER;
@@ -66,15 +66,20 @@ export class MaterialComponent implements OnInit {
           }
         }
         maxCompose = Math.floor(maxCompose > counts[m.name].lack ? counts[m.name].lack : maxCompose);
-        this.data[m.name].canMerge = maxCompose > 0;
+        counts[m.name].canMerge = maxCompose > 0;
       }
     }
+    const newData = {};
     for (const i of this.items) {
       const name = i.name;
-      this.data[name].lack = counts[name].lack;
-      this.data[name].have = counts[name].have;
-      this.data[name].need = counts[name].need;
+      const newItemData = new MaterialItemData(name);
+      newItemData.lack = counts[name].lack;
+      newItemData.have = counts[name].have;
+      newItemData.need = counts[name].need;
+      newItemData.canMerge = counts[name].canMerge;
+      newData[name] = newItemData;
     }
+    this.data = newData;
     this.fetchService.setLocalStorage('m-data', this.data);
   }
 

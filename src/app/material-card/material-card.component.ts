@@ -1,22 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MaterialItemData } from '../model/materialitemdata';
 import { MaterialInfo } from '../model/materialinfo';
 
 @Component({
   selector: 'app-material-card',
   templateUrl: './material-card.component.html',
-  styleUrls: ['./material-card.component.scss']
+  styleUrls: ['./material-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MaterialCardComponent implements OnInit {
   @Input() item: MaterialInfo;
-  data:MaterialItemData;
-  @Input()
-  set itemdata(data: MaterialItemData) {
-    this.data = data;
-  }
-  get itemdata() {
-    return this.data;
-  }
+  @Input() itemdata: MaterialItemData;
 
   @Output() dataChange = new EventEmitter<MaterialItemData>();
   @Output() reportMerge = new EventEmitter<string>();
