@@ -14,6 +14,15 @@ export class AppComponent {
   baseUrl: string;
   nav: any;
 
+  dialog = {
+    title: '提示',
+    message: '',
+    decline: '不了',
+    accept: '好的',
+    acceptCallback: () => { },
+    declineCallback: () => { }
+  };
+
   toggleDrawer(): void {
     this.drawerOpen = !this.drawerOpen;
   }
@@ -36,7 +45,8 @@ export class AppComponent {
           message: '有新版本可用，是否更新？(同样可以点击右上角手动更新）',
           actionText: '更新',
           multiline: true,
-          actionOnBottom: true
+          actionOnBottom: true,
+          timeout: 5000
         });
         snackbarRef.action().subscribe(() => {
           this.doUpdate();
@@ -58,6 +68,16 @@ export class AppComponent {
   }
   doClear() {
     localStorage.clear();
-    this.showSnackBar('所有本地数据已清除。', '好的');
+  }
+
+  beforeClear() {
+    this.dialog = {
+      title: '提示',
+      message: '是否清除本地输入数据？这在有些数据错误时很有用。（缓存数据不受影响）',
+      accept: '好的',
+      decline: '不了',
+      declineCallback: () => { },
+      acceptCallback: this.doClear
+    };
   }
 }

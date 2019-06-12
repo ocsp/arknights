@@ -7,6 +7,9 @@
 body{
     font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN", "Microsoft YaHei", "Wenquanyi Micro Hei", SimHei, "WenQuanYi Zen Hei", "ST Heiti", "WenQuanYi Zen Hei Sharp", sans-serif;
     margin: 0px;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 
 .mdc-button {
@@ -23,3 +26,75 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
+
+
+[data-md-tooltip] {
+    position: relative;
+    
+    &:before {
+      content: attr(data-md-tooltip);
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      padding: 8px;
+      transform: translateX(-50%) scale(0);
+      transition: transform 0.2s ease-in-out;
+      transform-origin: top;
+  
+      background: #616161e6;
+      color: white;
+      border-radius: 2px;
+      font-size: 12px;
+      font-family: Roboto,sans-serif;
+      font-weight: 400;
+    }
+    
+    &:hover:before {
+      transform: translateX(-50%) scale(1); 
+    }
+    
+    &.md-tooltip--right {
+      &:before {
+        left: auto;
+        right: -10px;
+        bottom: auto;
+        top: 50%;
+        transform: translate(100%, -50%) scale(0);
+        transform-origin: left center; 
+      }
+  
+      &:hover:before {
+        transform: translate(100%, -50%) scale(1);
+      }
+    }
+    
+    &.md-tooltip--left {
+      &:before {
+        left: -15px;
+        right: auto;
+        bottom: auto;
+        top: 50%;
+        transform: translate(-100%, -50%) scale(0);
+        transform-origin: right center; 
+      }
+  
+      &:hover:before {
+        transform: translate(-100%, -50%) scale(1);
+      }
+    }
+    
+    &.md-tooltip-disabled {
+      &:before {
+        display: none; 
+      }
+    }
+  }
+  
+  .md-tooltip--top {
+    &:before {
+      top: -35px;
+      bottom: auto;
+      transform: translateX(-50%) scale(0);
+      transform-origin: bottom center; 
+    } 
+  }

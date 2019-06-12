@@ -8,7 +8,7 @@
     <div mdcDrawerHeader>
       <div mdcDrawerHeaderContent>
         <div fxLayout="row" class="drawer-header">
-          <img class="img-header" src="../assets/icons/icon-512x512.png" />
+          <img class="img-header" src="../assets/icons/icon-192x192.png" />
           <div fxLayout="column" fxLayoutAlign="space-around end">
             <div>
               <a mdcToolbarTitle class="router-active" routerLink="/">明日方舟工具箱</a><br />
@@ -47,11 +47,26 @@
     </div>
   </nav>
 </aside>
+<aside #dialog1="mdcDialog" mdcDialog mdcFocusTrap (accept)="dialog.acceptCallback()" (decline)="dialog.declineCallback()">
+  <div mdcDialogSurface>
+    <header mdcDialogHeader>
+      <h2 mdcDialogHeaderTitle>{{dialog.title}}</h2>
+    </header>
+    <section mdcDialogBody>
+        {{dialog.message}}
+    </section>
+    <footer mdcDialogFooter>
+      <button mdcButton mdcDialogCancel>{{dialog.decline}}</button>
+      <button mdcButton mdcDialogAccept>{{dialog.accept}}</button>
+    </footer>
+  </div>
+  <div mdcDialogBackdrop></div>
+</aside>
 <header mdcToolbar>
   <div mdcToolbarRow>
     <section mdcToolbarSection alignStart>
       <a href="javascript:void(0)" mdcToolbarIcon class="material-icons" (click)="toggleDrawer()">menu</a>
-      <div class="toolbar-titles"><img class="img-title" src="../assets/icons/icon-512x512.png" /></div>
+      <div class="toolbar-titles"><img class="img-title" src="../assets/icons/icon-192x192.png" /></div>
       <div fxLayout="row" fxShow="false" fxShow.gt-md="true" class="toolbar-titles">
         <span><a mdcToolbarTitle routerLink="/" routerLinkActive="router-active">明日方舟工具箱</a></span>
         <span><a mdcToolbarTitle routerLink="/hr" routerLinkActive="router-active">公开招募</a></span>
@@ -70,7 +85,7 @@
       <a mdcToolbarIcon class="material-icons" aria-label="Update" alt="Update" (click)="doUpdate()">update</a>
       <a mdcToolbarIcon class="material-icons" aria-label="Help" alt="Help"
         (click)="showSnackBar('本功能待补充~','好的')">help</a>
-      <a mdcToolbarIcon class="material-icons" aria-label="Delete" alt="Delete" (click)="doClear()">delete</a>
+      <a mdcToolbarIcon class="material-icons" aria-label="Delete" alt="Delete" (click)="beforeClear();dialog1.open()">delete</a>
 
     </section>
   </div>

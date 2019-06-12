@@ -48,7 +48,6 @@ export class MaterialComponent implements OnInit {
         }
       }
     }
-    // console.log(counts);
     // 稀有度由低到高，检查现有材料是否能向上合成
     for (let i = 1; i < 5; i++) {
       for (let j = this.mByLvl[i].length - 1; j >= 0; j--) {
@@ -130,7 +129,6 @@ export class MaterialComponent implements OnInit {
     this.fetchService.getJson('./assets/data/material.json').subscribe(data => {
       const items = [];
       this.mByLvl = [];
-      const initLacks = {};
       this.mIdx = {};
       for (let i = 0; i < 5; i++) {
         this.mByLvl.push([]);
@@ -146,7 +144,6 @@ export class MaterialComponent implements OnInit {
         }
       }
       this.data = ldata;
-      // console.log(ldata);
       this.items = items.sort((a, b) => {
         return a.rarity > b.rarity ? -1 : (a.rarity < b.rarity ? 1 : (a.id > b.id) ? -1 : (a.id < b.id ? 1 : 0));
       });
