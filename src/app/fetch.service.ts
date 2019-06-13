@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,11 @@ export class FetchService {
     }
     const resp = this.http.get<any>(url);
     this.cache[url] = resp;
+    return resp;
+  }
+
+  public postJson(url: string, data: any): Observable<any> {
+    const resp = this.http.post<any>(url, data);
     return resp;
   }
 

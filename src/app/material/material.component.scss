@@ -1,6 +1,24 @@
+@import "../styles/custom.scss";
+
 .options-box {
-    padding: 0.5em 1em;
+  padding: 0.5em 1em;
 }
 .padding-025 {
-    padding: 0.25em;
+  padding: 0.25em;
+}
+h2,
+h4 {
+  margin: 0.25em 0;
+}
+section {
+  max-height: 60vh;
+  height: 60vh;
+}
+a {
+  text-decoration: none;
+  color: $mdc-theme-primary;
+}
+.mdc-list-item {
+  height: fit-content;
+  padding: 0.25em 0;
 }

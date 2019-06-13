@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FetchService } from '../fetch.service';
-import { MdcListItemSecondaryTextDirective } from '@blox/material';
+import { MdcListItemSecondaryTextDirective, MdcSnackbarService } from '@blox/material';
 import { MaterialItemData } from '../model/materialitemdata';
 import { MaterialInfo } from '../model/materialinfo';
 import { MaterialItem } from '../model/materialitem';
@@ -19,6 +19,15 @@ export class MaterialComponent implements OnInit {
   mByLvl: Array<Array<string>>;
   mIdx: { [key: string]: MaterialInfo };
   data: { [key: string]: MaterialItemData };
+  planResult: any = {
+    cost: 0,
+    stages: [],
+    syntheses: []
+  };
+  dialog: any;
+  cost = 0;
+  stagesText = [];
+  synsText = [];
 
   calc(): void {
     const counts = {};
@@ -103,7 +112,7 @@ export class MaterialComponent implements OnInit {
     this.fetchService.setLocalStorage('m-option', this.options);
   }
 
-  constructor(private fetchService: FetchService) {
+  constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService) {
     this.options = this.fetchService.getLocalStorage('m-option', {
       showOnly3plus: true,
       filtered: false,
@@ -164,4 +173,71 @@ export class MaterialComponent implements OnInit {
     return item === null ? null : item.id;
   }
 
+  plan() {
+    const owned = {};
+    const required = {};
+    for (const m in this.data) {
+      if (this.data[m]) {
+        const mt = this.data[m];
+        const mi = this.mIdx[m];
+        if (mi.id.startsWith('30')) {
+          if (mt.have !== 0) { owned[m] = mt.have; }
+          if (mt.need !== 0) { required[m] = mt.need; }
+        }
+      }
+    }
+    const proxy = 'https://rest.graueneko.xyz/proxy/';
+    this.planResult = this.fetchService.postJson(proxy + 'https://ak.inva.land/plan/', { owned, required })
+      .subscribe(plan => {
+        this.cost = plan && plan.cost ? plan.cost : 0;
+        const stage = plan && plan.stages && plan.stages.length !== 0 ? [...plan.stages] : [];
+        const syns = plan && plan.syntheses && plan.syntheses.length !== 0 ? [...plan.syntheses] : [];
+        for (const st of stage) {
+          const text = st.count + ' - [' + st.stage + '] - ';
+          const itemsText = [];
+          for (const it in st.items) {
+            if (st.items[it]) {
+              itemsText.push(it + ': ' + st.items[it]);
+            }
+          }
+          this.stagesText.push(text + itemsText.join(', '));
+        }
+        for (const syn of syns) {
+          const text = syn.count + ' - [' + syn.target + '] - ';
+          const itemsText = [];
+          for (const it in syn.materials) {
+            if (syn.materials[it]) {
+              itemsText.push(it + ': ' + syn.materials[it]);
+            }
+          }
+          this.synsText.push(text + itemsText.join(', '));
+        }
+      });
+  }
+
+  async copyResult() {
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText('材料规划路线（试用版）\r\n预计体力消耗: ' + this.cost
+          + '\r\n刷图获得：\r\n' + this.stagesText.join('\r\n')
+          + '\r\n合成获得：\r\n' + this.synsText.join('\r\n')
+          + '\r\n来源：明日方舟工具箱: https://aktools.graueneko.xyz & ArkPlanner: https://github.com/ycremar/ArkPlanner , 结果仅供参考');
+        this.snackbar.show({
+          message: '已复制到剪切板。',
+          actionText: '好的',
+          multiline: false,
+          actionOnBottom: false,
+          timeout: 5000
+        });
+      } catch (err) {
+        this.snackbar.show({
+          message: '复制失败。',
+          actionText: '好吧',
+          multiline: false,
+          actionOnBottom: false,
+          timeout: 5000
+        });
+      }
+    }
+  }
 }
