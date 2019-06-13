@@ -3,6 +3,7 @@ import { HrData } from '../model/hrdata';
 import { HrComb } from '../model/hrcomb';
 import { FetchService } from '../fetch.service';
 import { MdcSnackbarService } from '@blox/material';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class HrComponent implements OnInit {
   selectedTags: Array<string> = [];
   selectedStars: Array<number> = [1, 2, 3, 4, 5, 6];
   charSelected = '';
+  option = 0;
 
   onSelectTagChanged(selected: Array<string>): void {
     this.selectedTags = selected;
@@ -30,10 +32,12 @@ export class HrComponent implements OnInit {
     this.calculateCombs();
   }
 
-  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService) { }
+  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService, private router: Router) { }
 
   ngOnInit() {
     this.hrdata = new HrData();
+    this.option = this.fetch.getLocalStorage('hrcb-opt', 0);
+
     this.hrdata.tagrows = [
       {
         title: '资质', tags: ['新手', '资深干员', '高级资深干员'],
@@ -163,5 +167,15 @@ export class HrComponent implements OnInit {
       this.hrdata.combsBk = [];
       this.charSelected = '';
     }
+  }
+  clearTags() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigateByUrl(currentUrl);
+    });
+  }
+  toggleOption() {
+    this.option = (this.option + 1) % 3;
+    this.fetch.setLocalStorage('hrcb-opt', this.option);
   }
 }

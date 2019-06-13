@@ -45,9 +45,10 @@ th {
   padding: 0px;
 }
 
-.mdc-card {
+[mdcCard] {
   margin: 8px 4px;
 }
+
 
 // .btn-tag {
 //   background-color: $mdc-theme-secondary;
@@ -83,21 +84,17 @@ th {
   margin: 0px;
 }
 
-.option-0 {
-  background-color: $color-2;
-  color: #1a1d1e;
-}
-.option-1 {
-  background-color: $color-3;
-  color: #1a1d1e;
-}
-.option-2 {
-  background-color: $color-4;
-  color: white;
-}
-td {
-  min-width: 125px;
-}
+// td {
+//   min-width: 125px;
+// }
 .p-25{
   padding: 0.25em;
+}
+.inline-block {
+  display: inline-block;
+}
+.hidden-gap-row {
+  height: 1px;
+  width: 100%;
+  min-width: 100%;
 }

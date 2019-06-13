@@ -47,10 +47,6 @@ export class HrTagsComponent implements OnInit {
     }
     this.reportSelectedTags.emit(this.selectedTags);
   }
-  clearTags() {
-    this.selectedTags = [];
-    this.reportSelectedTags.emit(this.selectedTags);
-  }
   showSnackBar(msg: string, action: string) {
     this.snackbar.show({
       message: msg,

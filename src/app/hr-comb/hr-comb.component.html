@@ -1,8 +1,5 @@
-<div><button mdcButton raised [ngClass]="'option-'+option" id="btnOption" (click)="toggleOption()">切换TAG位置</button>
-</div>
-
 <ng-container *ngIf="option===0">
-  <div mdcCard *ngFor="let comb of hrcombs; trackBy: trackComb">
+  <div mdcCard class="inline-block" *ngFor="let comb of hrcombs; trackBy: trackComb">
     <div fxLayout="row" fxLayoutAlign="space-between center" [ngClass]="{'gap-row': true}">
       <div class="p-25">
         <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
@@ -20,11 +17,14 @@
 </ng-container>
 
 <ng-container *ngIf="option===1">
-  <div mdcCard *ngFor="let comb of hrcombs; trackBy: trackComb">
-    <div class="p-25">
-      <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
-      <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}"
-        [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
+  <div *ngFor="let comb of hrcombs; trackBy: trackComb">
+    <div mdcCard class="inline-block">
+      <div class="p-25 inline-block gap-row">
+        <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button> </div>
+      <span class="p-25">
+        <button mdcButton raised (click)="onNameClick(char.name)" class="char-lvl-{{char.level}}"
+          [ngClass]="{'char-hl': char.name===charSelected}" *ngFor="let char of comb.possible">{{char.name}}</button>
+      </span>
     </div>
   </div>
 </ng-container>
