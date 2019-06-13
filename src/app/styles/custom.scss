@@ -17,5 +17,9 @@ $highlight-background: #e8eaf7;
 
 button {
   margin: 0.25em;
-  white-space:nowrap;
+  white-space: nowrap;
+}
+a {
+  text-decoration: none;
+  color: $mdc-theme-primary;
 }

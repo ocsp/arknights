@@ -16,7 +16,7 @@ import { MaterialCardComponent } from './material-card/material-card.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { MainComponent } from './main/main.component';
-import { AddToHomescreenComponent } from './add-to-homescreen/add-to-homescreen.component';
+import { HelpComponent } from './help/help.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { CharMatComponent } from './char-mat/char-mat.component';
 import { CharMatCharcardComponent } from './char-mat-charcard/char-mat-charcard.component';
@@ -32,7 +32,7 @@ import { CharMatMatcardComponent } from './char-mat-matcard/char-mat-matcard.com
     MaterialComponent,
     MaterialCardComponent,
     MainComponent,
-    AddToHomescreenComponent,
+    HelpComponent,
     CharMatComponent,
     CharMatCharcardComponent,
     CharMatMatcardComponent

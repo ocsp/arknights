@@ -4,14 +4,14 @@ import { HrComponent } from './hr/hr.component';
 import { LvlupComponent } from './lvlup/lvlup.component';
 import { MaterialComponent } from './material/material.component';
 import { MainComponent } from './main/main.component';
-import { AddToHomescreenComponent } from './add-to-homescreen/add-to-homescreen.component';
+import { HelpComponent } from './help/help.component';
 import { CharMatComponent } from './char-mat/char-mat.component';
 
 const routes: Routes = [
   { path: 'hr', component: HrComponent },
   { path: 'lvlup', component: LvlupComponent },
   { path: 'material', component: MaterialComponent },
-  { path: 'homescreen', component: AddToHomescreenComponent },
+  { path: 'help', component: HelpComponent },
   { path: 'charmat', component: CharMatComponent },
   { path: '', component: MainComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/' }

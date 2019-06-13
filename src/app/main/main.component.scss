@@ -1,5 +1,11 @@
 @import "../styles/custom.scss";
 
+.main-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1em;
+}
+
 .img-logos {
   max-width: 100px;
   max-height: 100px;
@@ -15,16 +21,26 @@ p {
   color: $mdc-theme-primary;
 }
 
-h1,h2,h3,h4,h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-weight: 600;
 }
 
-.contributor{
+.contributor {
   padding: 0.5em;
 }
 
-.contributor img{
+.contributor img {
   border-radius: 50%;
+  max-height: 64px;
+  max-width: 64px;
+  height: auto;
+  width: auto;
+}
+.joinus img {
   max-height: 64px;
   max-width: 64px;
   height: auto;
