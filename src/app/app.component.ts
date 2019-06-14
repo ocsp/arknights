@@ -42,6 +42,7 @@ export class AppComponent {
     this.baseUrl = window.location.origin;
     this.nav = window.navigator;
     if (this.swUpdate.isEnabled) {
+      this.swUpdate.checkForUpdate();
       this.swUpdate.available.subscribe(() => {
         const snackbarRef = this.snackBar.show({
           message: '有新版本可用，是否更新？(同样可以点击右上角手动更新）',
@@ -57,7 +58,7 @@ export class AppComponent {
     }
   }
   doUpdate() {
-    window.location.reload();
+    this.swUpdate.activateUpdate().then(() => window.location.reload());
   }
   doShare() {
     if (this.nav && this.nav.share) {
