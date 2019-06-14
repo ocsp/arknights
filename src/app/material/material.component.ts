@@ -226,16 +226,14 @@ export class MaterialComponent implements OnInit {
           message: '已复制到剪切板。',
           actionText: '好的',
           multiline: false,
-          actionOnBottom: false,
-          timeout: 5000
+          actionOnBottom: false
         });
       } catch (err) {
         this.snackbar.show({
           message: '复制失败。',
           actionText: '好吧',
           multiline: false,
-          actionOnBottom: false,
-          timeout: 5000
+          actionOnBottom: false
         });
       }
     }

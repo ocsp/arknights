@@ -30,10 +30,7 @@
 <div fxLayout="row wrap" fxLayoutAlign="center center">
   <div fxLayout="row" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="end center" fxLayoutGap="1%" class="options-box">
     <div mdcFormField>
-      <button mdcButton raised dense (click)="reset()">重置</button>
-    </div>
-    <div mdcFormField>
-      <button mdcButton raised dense (click)="plan();dialogPlan.open()">规划</button>
+      <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
     </div>
     <div mdcFormField>
       <div mdcSwitch>
@@ -46,6 +43,9 @@
         <input mdcSwitchInput type="checkbox" [(ngModel)]="options.filtered" (change)="onOptionChange()" />
       </div>
       <label mdcFormFieldLabel>过滤</label>
+    </div>
+    <div mdcFormField>
+      <button mdcButton raised dense (click)="plan();dialogPlan.open()">规划</button>
     </div>
   </div>
   <div fxLayout="row" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="start center" fxLayoutGap="1%" class="options-box">
