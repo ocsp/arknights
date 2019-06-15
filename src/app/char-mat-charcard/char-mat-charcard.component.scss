@@ -68,6 +68,7 @@ input, select {
   [mdcButton].btnTitle{
     min-width: 54px;
     width:54px;
+    white-space: normal;
   }
   .mdc-text-field--upgraded:not(.mdc-text-field--fullwidth):not(.mdc-text-field--box){
     margin-top: 0;

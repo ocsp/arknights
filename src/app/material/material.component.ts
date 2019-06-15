@@ -186,8 +186,7 @@ export class MaterialComponent implements OnInit {
         }
       }
     }
-    const proxy = 'https://rest.graueneko.xyz/proxy/';
-    this.planResult = this.fetchService.postJson(proxy + 'https://ak.inva.land/plan/', { owned, required })
+    this.planResult = this.fetchService.postJson('https://ak.inva.land/plan/', { owned, required })
       .subscribe(plan => {
         this.cost = plan && plan.cost ? plan.cost : 0;
         const stage = plan && plan.stages && plan.stages.length !== 0 ? [...plan.stages] : [];
