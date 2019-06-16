@@ -1,7 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { MdcSnackbarService } from '@blox/material';
 import { SwUpdate } from '@angular/service-worker';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+declare var ga: Function;
 
 @Component({
   selector: 'app-root',
@@ -56,6 +57,12 @@ export class AppComponent {
         });
       });
     }
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        ga('set', 'page', event.urlAfterRedirects);
+        ga('send', 'pageview');
+      }
+    });
   }
   doUpdate() {
     this.swUpdate.activateUpdate().then(() => window.location.reload());
