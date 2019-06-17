@@ -191,6 +191,8 @@ export class MaterialComponent implements OnInit {
         this.cost = plan && plan.cost ? plan.cost : 0;
         const stage = plan && plan.stages && plan.stages.length !== 0 ? [...plan.stages] : [];
         const syns = plan && plan.syntheses && plan.syntheses.length !== 0 ? [...plan.syntheses] : [];
+        this.stagesText = [];
+        this.synsText = [];
         for (const st of stage) {
           const text = st.count + ' - [' + st.stage + '] - ';
           const itemsText = [];
