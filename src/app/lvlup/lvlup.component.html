@@ -144,7 +144,7 @@
       <div mdcTextField dense class="input-field">
         <span>
           <input mdcTextFieldInput #input1="ngModel" type="number" [(ngModel)]="bookBasic" placeholder="基础经验书">
-          <label mdcFloatingLabel class="mdc-floating-label--float-above">基础经验书</label>
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">{{isExsm?'基础书':'基础经验书'}}</label>
         </span>
         <span>
           <button mdcButton dense (click)="bookBasic=0">
@@ -159,7 +159,7 @@
       <div mdcTextField dense class="input-field">
         <span>
           <input mdcTextFieldInput #input1="ngModel" type="number" [(ngModel)]="bookPrimary" placeholder="初级经验书">
-          <label mdcFloatingLabel class="mdc-floating-label--float-above">初级经验书</label>
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">{{isExsm?'初级书':'初级经验书'}}</label>
         </span>
         <span>
           <button mdcButton dense (click)="bookPrimary=0">
@@ -174,7 +174,7 @@
       <div mdcTextField dense class="input-field">
         <span>
           <input mdcTextFieldInput #input1="ngModel" type="number" [(ngModel)]="bookMiddle" placeholder="中级经验书">
-          <label mdcFloatingLabel class="mdc-floating-label--float-above">中级经验书</label>
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">{{isExsm?'中级书':'经验书'}}</label>
         </span>
         <span>
           <button mdcButton dense (click)="bookMiddle=0">
@@ -189,7 +189,7 @@
       <div mdcTextField dense class="input-field">
         <span>
           <input mdcTextFieldInput #input1="ngModel" type="number" [(ngModel)]="bookAdvanced" placeholder="">
-          <label mdcFloatingLabel class="mdc-floating-label--float-above">高级经验书</label>
+          <label mdcFloatingLabel class="mdc-floating-label--float-above">{{isExsm?'高级书':'高级经验书'}}</label>
         </span>
         <span>
           <button mdcButton dense (click)="bookAdvanced=0">

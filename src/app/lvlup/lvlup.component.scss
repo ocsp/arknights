@@ -14,8 +14,9 @@ input, select {
 }
 
 [mdcCard] {
-    min-width: 320px;
+    min-width: 280px;
     max-width: 100%;
+    width: 350px;
 
     .custom-card-group-heading {
         color: $mdc-theme-primary;

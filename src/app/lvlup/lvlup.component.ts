@@ -48,8 +48,12 @@ export class LvlupComponent implements OnInit {
   lsMap = '5';
   ceMap = '5';
 
+  isExsm = false;
 
-  constructor(private fetchService: FetchService) { }
+
+  constructor(private fetchService: FetchService) {
+    this.isExsm = fetchService.getLocalStorage('s-exsm', false);
+  }
 
   toMaxLvl(isCurrent: boolean) {
     if (isCurrent) {
