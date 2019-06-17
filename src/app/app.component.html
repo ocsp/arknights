@@ -47,21 +47,6 @@
     </div>
   </nav>
 </aside>
-<aside #dialog1="mdcDialog" mdcDialog mdcFocusTrap (accept)="dialog.acceptCallback()" (decline)="dialog.declineCallback()">
-  <div mdcDialogSurface>
-    <header mdcDialogHeader>
-      <h2 mdcDialogHeaderTitle>{{dialog.title}}</h2>
-    </header>
-    <section mdcDialogBody>
-        {{dialog.message}}
-    </section>
-    <footer mdcDialogFooter>
-      <button mdcButton mdcDialogCancel>{{dialog.decline}}</button>
-      <button mdcButton mdcDialogAccept>{{dialog.accept}}</button>
-    </footer>
-  </div>
-  <div mdcDialogBackdrop></div>
-</aside>
 <header mdcToolbar>
   <div mdcToolbarRow>
     <section mdcToolbarSection alignStart>
@@ -83,8 +68,7 @@
       <a mdcToolbarIcon class="material-icons" aria-label="Update" alt="Update" (click)="doUpdate()">update</a>
       <a mdcToolbarIcon class="material-icons" routerLink="/help" aria-label="Help" alt="Help"
         (click)="showSnackBar('本功能待补充~','好的')">help</a>
-      <a mdcToolbarIcon class="material-icons" aria-label="Delete" alt="Delete" (click)="beforeClear();dialog1.open()">delete</a>
-
+      <a mdcToolbarIcon class="material-icons" routerLink="/settings" aria-label="Settings" alt="Settings">settings</a>
     </section>
   </div>
 </header>

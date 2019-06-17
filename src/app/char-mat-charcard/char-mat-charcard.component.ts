@@ -26,6 +26,7 @@ export class CharMatCharcardComponent implements OnInit {
     maxSkill: 1,
     maxSpecial: [],
   };
+  isExsm = false;
   emitRemove() {
     this.reportRemove.emit(this.char.name);
   }
@@ -62,6 +63,7 @@ export class CharMatCharcardComponent implements OnInit {
       }
     }
     this.calc();
+    this.isExsm = this.fetch.getLocalStorage('s-exsm', false);
   }
 
   onEvolveClick(isTarget: boolean, isAdd: boolean) {

@@ -1,0 +1,35 @@
+<aside #dialog1="mdcDialog" mdcDialog mdcFocusTrap (accept)="dialog.acceptCallback()"
+  (decline)="dialog.declineCallback()">
+  <div mdcDialogSurface>
+    <header mdcDialogHeader>
+      <h2 mdcDialogHeaderTitle>{{dialog.title}}</h2>
+    </header>
+    <section mdcDialogBody>
+      {{dialog.message}}
+    </section>
+    <footer mdcDialogFooter>
+      <button mdcButton mdcDialogCancel>{{dialog.decline}}</button>
+      <button mdcButton mdcDialogAccept>{{dialog.accept}}</button>
+    </footer>
+  </div>
+  <div mdcDialogBackdrop></div>
+</aside>
+<div class="settings-container">
+  <div mdcListGroup>
+    <h3 mdcListGroupSubHeader>设置</h3>
+    <ul mdcList>
+      <li mdcListItem>
+        <div mdcFormField>
+          <div mdcSwitch>
+            <input mdcSwitchInput type="checkbox" [(ngModel)]="isExtraSmall" (change)="saveSettings()"/>
+          </div>
+          <label mdcFormFieldLabel>超小屏幕模式</label>
+        </div>
+      </li>
+      <li mdcListDivider></li>
+      <li mdcListItem (click)="beforeClear();dialog1.open()">
+        <i mdcListItemGraphic class="material-icons">delete</i>清空本地数据
+      </li>
+    </ul>
+  </div>
+</div>

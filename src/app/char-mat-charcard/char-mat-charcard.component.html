@@ -11,7 +11,7 @@
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onEvolveClick(false,false)" [attr.disabled]="data.ce>0?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onEvolveClick(false,false)" [attr.disabled]="data.ce>0?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -20,7 +20,7 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onEvolveClick(false,true)"
+          <button *ngIf="!isExsm" mdcButton dense (click)="onEvolveClick(false,true)"
             [attr.disabled]="data.ce>=limits.maxEvolve?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>
@@ -28,7 +28,7 @@
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onEvolveClick(true,false)" [attr.disabled]="data.te>0?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onEvolveClick(true,false)" [attr.disabled]="data.te>0?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -37,7 +37,7 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onEvolveClick(true,true)"
+          <button *ngIf="!isExsm" mdcButton dense (click)="onEvolveClick(true,true)"
             [attr.disabled]="data.te>=limits.maxEvolve?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>
@@ -51,7 +51,7 @@
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onSkillClick(false,false)" [attr.disabled]="data.cs>1?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSkillClick(false,false)" [attr.disabled]="data.cs>1?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -60,14 +60,14 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onSkillClick(false,true)" [attr.disabled]="data.cs>=limits.maxSkill?'':null">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSkillClick(false,true)" [attr.disabled]="data.cs>=limits.maxSkill?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>
         </span>
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onSkillClick(true,false)" [attr.disabled]="data.ts>1?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSkillClick(true,false)" [attr.disabled]="data.ts>1?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -76,7 +76,7 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onSkillClick(true,true)" [attr.disabled]="data.ts>=limits.maxSkill?'':null">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSkillClick(true,true)" [attr.disabled]="data.ts>=limits.maxSkill?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>
         </span>
@@ -90,7 +90,7 @@
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onSpecialClick(idx,false,false)" [attr.disabled]="data.css[idx]>0?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSpecialClick(idx,false,false)" [attr.disabled]="data.css[idx]>0?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -99,7 +99,7 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">当前</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onSpecialClick(idx,false,true)"
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSpecialClick(idx,false,true)"
             [attr.disabled]="data.css[idx]>=limits.maxSpecial[idx]?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>
@@ -107,7 +107,7 @@
       </div>
       <div mdcTextField dense class="input-field">
         <span>
-          <button mdcButton dense (click)="onSpecialClick(idx,true,false)" [attr.disabled]="data.tss[idx]>0?null:''">
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSpecialClick(idx,true,false)" [attr.disabled]="data.tss[idx]>0?null:''">
             <i mdcButtonIcon class="material-icons">remove</i>
           </button>
         </span>
@@ -116,7 +116,7 @@
           <label mdcFloatingLabel class="mdc-floating-label--float-above">目标</label>
         </span>
         <span>
-          <button mdcButton dense (click)="onSpecialClick(idx,true,true)"
+          <button *ngIf="!isExsm" mdcButton dense (click)="onSpecialClick(idx,true,true)"
             [attr.disabled]="data.tss[idx]>=limits.maxSpecial[idx]?'':null">
             <i mdcButtonIcon class="material-icons">add</i>
           </button>

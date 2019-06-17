@@ -17,15 +17,6 @@ export class AppComponent {
   nav: any;
   temporary = 'temporary';
 
-  dialog = {
-    title: '提示',
-    message: '',
-    decline: '不了',
-    accept: '好的',
-    acceptCallback: () => { },
-    declineCallback: () => { }
-  };
-
   toggleDrawer(): void {
     this.drawerOpen = !this.drawerOpen;
   }
@@ -77,36 +68,10 @@ export class AppComponent {
     }
   }
 
-  beforeClear() {
-    this.dialog = {
-      title: '提示',
-      message: '是否清除本地输入数据？这在有些数据错误时很有用。（缓存数据不受影响）',
-      accept: '好的',
-      decline: '不了',
-      declineCallback: () => { },
-      acceptCallback: () => {
-        localStorage.clear();
-        const currentUrl = this.router.url;
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigateByUrl(currentUrl);
-        });
-        this.showSnackBar('输入数据已清空', '好的');
-      }
-    };
-  }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
   onbeforeinstallprompt(e) {
     e.preventDefault();
     this.deferredPrompt = e;
-  }
-
-  addToHomeScreen() {
-    if (this.deferredPrompt) {
-      this.deferredPrompt.prompt();
-      this.deferredPrompt = null;
-    } else {
-      this.router.navigateByUrl('/homescreen');
-    }
   }
 }

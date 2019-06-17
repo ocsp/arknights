@@ -21,6 +21,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { CharMatComponent } from './char-mat/char-mat.component';
 import { CharMatCharcardComponent } from './char-mat-charcard/char-mat-charcard.component';
 import { CharMatMatcardComponent } from './char-mat-matcard/char-mat-matcard.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CharMatMatcardComponent } from './char-mat-matcard/char-mat-matcard.com
     HelpComponent,
     CharMatComponent,
     CharMatCharcardComponent,
-    CharMatMatcardComponent
+    CharMatMatcardComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
