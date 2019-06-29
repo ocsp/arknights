@@ -3,6 +3,8 @@ import {Tesseract} from 'tesseract.ts';
 import * as tf from '@tensorflow/tfjs';
 import { yolov3Tiny } from 'tfjs-yolov3'
 import a from '../../assets/models/tfjs-yolov3/classes.js';
+import * as $ from "jquery"
+
 @Component({
   selector: 'app-auto-detect',
   templateUrl: './auto-detect.component.html',
@@ -12,6 +14,19 @@ export class AutoDetectComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    var loaded = document.getElementById("loadedimg")
+    var file = document.querySelector('#test-image-file');
+    file.addEventListener('change', previewImage, false);
+// 图片预览
+    function previewImage(event) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        console.log("loaded");
+        // @ts-ignore
+        (loaded as HTMLImageElement).src = event.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
   digitReg() {
@@ -29,7 +44,7 @@ export class AutoDetectComponent implements OnInit {
   }
   async testTf() {
     const yolo = await yolov3Tiny({modelUrl:'./assets/models/Yolo-identify/model.json',anchors:[37,61, 21,65, 37,42, 28,57, 376,370, 38,77]})
-    const inputImage = './assets/img/w1T.jpg';
+    //const inputImage = './assets/img/w1T.jpg';
 
     // @ts-ignore
     const boxes = await yolo(document.getElementById("loadedimg"));
@@ -62,6 +77,36 @@ export class AutoDetectComponent implements OnInit {
     const batched = img.reshape([1, 832, 832, 3]);
     const prediction = model.predict(batched);
     console.log(prediction)*/
+  }
+
+  Onupdate(){
+    var fileInput = document.getElementById('test-image-file');
+    /*
+    $.ajax({
+      type : 'post',
+      url : '/uploadUserImgPre',
+      data: FormData ,
+      processData:false,
+      async:false,
+      cache: false,
+      contentType: false,
+      success:function(re){
+        re.imgSrc = re.imgSrc.replace('public','');
+        re.imgSrc = re.imgSrc.replace(/\\/g,'\/');
+        $('#j_imgPic').attr('src',re.imgSrc);
+      },
+      error:function(re){
+        console.log(re);
+      }
+    });
+    */
+
+    // @ts-ignore
+      console.log(fileInput.value)
+
+      // @ts-ignore
+      //loaded.src = fileInput.value;
+
   }
 
 
