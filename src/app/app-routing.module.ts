@@ -7,6 +7,7 @@ import { MainComponent } from './main/main.component';
 import { HelpComponent } from './help/help.component';
 import { CharMatComponent } from './char-mat/char-mat.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AutoDetectComponent } from './auto-detect/auto-detect.component';
 
 const routes: Routes = [
   { path: 'hr', component: HrComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'charmat', component: CharMatComponent },
   { path: 'settings', component: SettingsComponent },
   { path: '', component: MainComponent, pathMatch: 'full' },
+  { path: 'autodetect', component: AutoDetectComponent},
   { path: '**', redirectTo: '/' }
 ];
 
