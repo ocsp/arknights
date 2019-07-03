@@ -6,7 +6,7 @@ import nums from "./num.js";
 import classesName from "./itemList.js"
 import yolo from 'tfjs-yolo'
 import itemList from "./itemList";
-
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-auto-detect',
@@ -15,6 +15,7 @@ import itemList from "./itemList";
 })
 export class AutoDetectComponent implements OnInit {
   detectedItemList = new Array(new Array())
+  private ACCESS_TOKEN = '24.95a895b1b4ca7acf500dc527f0efbb94.2592000.1564725954.282335-16699672'
 
   constructor() { }
 
@@ -55,7 +56,7 @@ export class AutoDetectComponent implements OnInit {
       console.log(top,left, bottom, right, width, height, score, classes,)
     });*/
     // const numDetect = yolov3Tiny({modelUrl:'./assets/models/numtfjs/model.json',anchors:[21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42]})
-    var changed = document.getElementById("changed");
+    /*var changed = document.getElementById("changed");
     // @ts-ignore
     changed.src = "./assets/img/i1.jpg"
     const numDetect = await yolo.v3tiny('./assets/models/numtfjsnew/model.json')
@@ -83,7 +84,7 @@ export class AutoDetectComponent implements OnInit {
       console.log(box)
       //console.log(top,left, bottom, right, width, height, score, classes,)
     });
-    console.log(result)
+    console.log(result)*/
 
     //this.testNum(changed, numDetect,"name")
     // console.log(numDetect(changed))
@@ -137,7 +138,8 @@ export class AutoDetectComponent implements OnInit {
           //console.log(changed.src)
 
           let count = await this.testNum(changed,numDetect,classes)
-          console.log(count)
+          return count
+          /*console.log(count)
 
           let dulplicate = false
           for (let i = 0; i< this.detectedItemList.length;i++){
@@ -151,7 +153,7 @@ export class AutoDetectComponent implements OnInit {
           }
 
           this.detectedItemList.push([classes,parseInt(count),score])
-          console.log("Success")
+          console.log("Success")*/
 
         }
 
@@ -205,7 +207,36 @@ boxes;
   }
 
   async testNum(img, detector,name){
-    const numRes = await detector.predict(
+    let img64 = img.src.replace('data:image/jpeg;base64,','')
+    console.log(img64)
+    $.ajax({
+      type: 'POST',
+      headers: {"Content-type":"application/x-www-form-urlencoded"},
+      url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN,
+      data: {
+        "image" : img64,
+        probability : true
+      },
+      success: function (res) {
+        console.log(res)
+      },
+      dataType: 'JSON'
+    });
+    /*var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+    httpRequest.open('POST', 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN+"&jsoncallback=?", true); //第二步：打开连接
+    httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
+    httpRequest.send(' image='+img.src.replace('data:image/!*;base64,',''));//发送请求 将情头体写在send中
+    /!**
+     * 获取数据后的处理程序
+     *!/
+    httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+      if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+        var json = httpRequest.responseText;//获取到服务端返回的数据
+        console.log(json);
+      }
+    };*/
+
+    /*const numRes = await detector.predict(
       img,
       {
         maxBoxes: 20,          // defaults to 20
@@ -251,7 +282,7 @@ boxes;
         return '0'
       }
       return classes
-    }
+    }*/
 
   }
 
