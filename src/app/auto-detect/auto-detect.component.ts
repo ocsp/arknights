@@ -5,6 +5,7 @@ import * as tf from '@tensorflow/tfjs';
 import nums from "./num.js";
 import classesName from "./itemList.js"
 import yolo from 'tfjs-yolo'
+import itemList from "./itemList";
 
 
 @Component({
@@ -13,10 +14,11 @@ import yolo from 'tfjs-yolo'
   styleUrls: ['./auto-detect.component.scss']
 })
 export class AutoDetectComponent implements OnInit {
+  detectedItemList = new Array(new Array())
+
   constructor() { }
 
   async ngOnInit() {
-
     var loaded = document.getElementById("loadedimg")
     var file = document.querySelector('#test-image-file');
     file.addEventListener('change', previewImage, false);
@@ -30,19 +32,41 @@ export class AutoDetectComponent implements OnInit {
       };
       reader.readAsDataURL(event.target.files[0]);
     }
+    // @ts-ignore
+    /*loaded.src = './assets/img/i1.jpg'
+
+    const test = await yolo.v3tiny('./assets/models/numtfjs3/model.json')
+    // @ts-ignore
+    var result = await test(loaded)
+    console.log(result)
+    result.forEach(box => {
+      // @ts-ignore
+      const {
+        top,
+        left,
+        bottom,
+        right,
+        width,
+        height,
+        score: score,
+        class: classes,
+      } = box;
+      console.log(box)
+      console.log(top,left, bottom, right, width, height, score, classes,)
+    });*/
     // const numDetect = yolov3Tiny({modelUrl:'./assets/models/numtfjs/model.json',anchors:[21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42]})
     var changed = document.getElementById("changed");
     // @ts-ignore
-    changed.src = "./assets/img/w1T.jpg"
-    const numDetect = await yolo.v3tiny('./assets/models/numtfjs2/model.json')
+    changed.src = "./assets/img/i1.jpg"
+    const numDetect = await yolo.v3tiny('./assets/models/numtfjsnew/model.json')
     var result = await numDetect.predict(changed,{
       maxBoxes: 10,          // defaults to 20
-      scoreThreshold: .005,   // defaults to .5
-      iouThreshold: .5,     // defaults to .3
+      scoreThreshold: .1,   // defaults to .5
+      iouThreshold: .3,     // defaults to .3
       numClasses: 10,       // defaults to 80 for yolo v3, tiny yolo v2, v3 and 20 for tiny yolo v1
       anchors: [21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42],       // See ./src/config.js for examples
       classNames: nums,    // defaults to coco classes for yolo v3, tiny yolo v2, v3 and voc classes for tiny yolo v1
-      inputSize: 416,       // defaults to 416
+      inputSize: 320,       // defaults to 416
     })
     result.forEach(box => {
       // @ts-ignore
@@ -73,8 +97,11 @@ export class AutoDetectComponent implements OnInit {
         console.log("Empty!");
         return
       }
-      const numDetect = await yolo.v3tiny('./assets/models/numtfjs2/model.json')//[21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42]})
+      const numDetect = await yolo.v3tiny('./assets/models/numtfjsnew/model.json')//[21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42]})
+      var boxlist = new Array()
+      let count = 0
       this.boxes.forEach(box => {
+        boxlist.push(box)
         let {
           top,
           left,
@@ -85,13 +112,49 @@ export class AutoDetectComponent implements OnInit {
           score: score,
           class: classes,
         } = box;
-        // @ts-ignore
-        let size = Math.max(Math.ceil(width), Math.ceil(height))
-        // @ts-ignore
-        changed.src = this.getImagePortion(loaded, size, size, Math.ceil(left),Math.ceil(top) , 1);
-        //console.log(changed.src)
-        this.testNum(changed,numDetect,classes)
       })
+      for (let i = 0;i<boxlist.length;i++) {
+        let {
+          top,
+          left,
+          bottom,
+          right,
+          width,
+          height,
+          score: score,
+          class: classes,
+        } = boxlist[i];
+
+          // @ts-ignore
+          let size = Math.max(Math.ceil(width), Math.ceil(height))
+          // @ts-ignore
+          changed.src = await this.getImagePortion(loaded, size, size, Math.ceil(left),Math.ceil(top) , 1);
+          // @ts-ignore
+        // time = new Date()
+        // @ts-ignore
+        //this.downLoad(changed.src,'a'+time.getTime())
+        //  count++
+          //console.log(changed.src)
+
+          let count = await this.testNum(changed,numDetect,classes)
+          console.log(count)
+
+          let dulplicate = false
+          for (let i = 0; i< this.detectedItemList.length;i++){
+            if(this.detectedItemList[i][0]==classes){
+              dulplicate=true
+              if(this.detectedItemList[i][2]>=score)
+                continue;
+              this.detectedItemList[i][1] = parseInt(count);
+              return
+            }
+          }
+
+          this.detectedItemList.push([classes,parseInt(count),score])
+          console.log("Success")
+
+        }
+
     }catch (e) {
       if(e == TypeError)
         console.error("Nothing Detected");
@@ -113,13 +176,13 @@ boxes;
     this.boxes = await ItemDetect.predict(document.getElementById("loadedimg"),{
       maxBoxes: 30,          // defaults to 20
       scoreThreshold: .25,   // defaults to .5
-      iouThreshold: .5,     // defaults to .3
+      iouThreshold: .3,     // defaults to .3
       numClasses: 86,       // defaults to 80 for yolo v3, tiny yolo v2, v3 and 20 for tiny yolo v1
       anchors: [37,61, 21,65, 37,42, 28,57, 376,370, 38,77],       // See ./src/config.js for examples
       classNames: classesName,    // defaults to coco classes for yolo v3, tiny yolo v2, v3 and voc classes for tiny yolo v1
       inputSize: 416,       // defaults to 416
     });
-    console.log(typeof this.boxes)
+    //console.log(typeof this.boxes)
 
 // Display detected boxes
     this.boxes.forEach(box => {
@@ -134,23 +197,24 @@ boxes;
         score: score,
         class: classes,
       } = box;
-      console.log(box)
-      //console.log(top,left, bottom, right, width, height, score, classes,)
+      //console.log(box)
+      console.log(top,left, bottom, right, width, height, score, classes,)
     });
-
+    ItemDetect.dispose()
+    this.digitReg()
   }
 
   async testNum(img, detector,name){
     const numRes = await detector.predict(
       img,
       {
-        maxBoxes: 10,          // defaults to 20
-        scoreThreshold: .05,   // defaults to .5
-        iouThreshold: .5,     // defaults to .3
+        maxBoxes: 20,          // defaults to 20
+        scoreThreshold: .01,   // defaults to .5
+        iouThreshold: .05,     // defaults to .3
         numClasses: 10,       // defaults to 80 for yolo v3, tiny yolo v2, v3 and 20 for tiny yolo v1
         anchors: [21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42],       // See ./src/config.js for examples
         classNames: nums,    // defaults to coco classes for yolo v3, tiny yolo v2, v3 and voc classes for tiny yolo v1
-        inputSize: 416,       // defaults to 416
+        inputSize: 320,       // defaults to 416
       });
     try {
       numRes.forEach(box => {
@@ -166,6 +230,7 @@ boxes;
         } = box;
 
         console.log(name +":" +classes)
+        return classes
       });
     }catch (e) {
       const {
@@ -179,8 +244,13 @@ boxes;
         class: classes,
       } = numRes;
       console.log(numRes)
-      console.log(top,left, bottom, right, width, height, score, numRes.classes,)
+      console.log(top,left, bottom, right, width, height, score, classes,)
       console.log(name + ":"+ classes)
+      if (numRes == undefined){
+        console.log("Num fail")
+        return '0'
+      }
+      return classes
     }
 
   }
@@ -205,6 +275,14 @@ boxes;
     //From https://www.codewoody.com/posts/2543/
   }
 
+  downLoad(url,name){
+    var oA = document.createElement("a");
+    oA.download = name;// 设置下载的文件名，默认是'下载'
+    oA.href = url;
+    document.body.appendChild(oA);
+    oA.click();
+    oA.remove(); // 下载之后把创建的元素删除
+  }
 
 
 }

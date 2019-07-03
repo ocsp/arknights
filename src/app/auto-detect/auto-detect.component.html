@@ -6,3 +6,7 @@
   <img src="" id ="loadedimg" alt="等待上传" >
   <img src="" id = "changed">
 </p>
+<div fxFlex="100" fxFlex.gt-sm="50%" ngClass.gt-sm="padding-x-1" fxLayout="row" fxLayoutAlign="center start" *ngFor="let item of detectedItemList">
+<p>{{item[0]}}:{{item[1]}}({{item[2]*100}}%)</p><br>
+</div>
+
