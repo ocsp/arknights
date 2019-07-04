@@ -15,7 +15,8 @@ import * as $ from "jquery";
 })
 export class AutoDetectComponent implements OnInit {
   detectedItemList = new Array(new Array())
-  private ACCESS_TOKEN = '24.95a895b1b4ca7acf500dc527f0efbb94.2592000.1564725954.282335-16699672'
+  private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672'
+  proxy="https://rest.graueneko.xyz/proxy/"
 
   constructor() { }
 
@@ -138,8 +139,8 @@ export class AutoDetectComponent implements OnInit {
           //console.log(changed.src)
 
           let count = await this.testNum(changed,numDetect,classes)
-          return count
-          /*console.log(count)
+          //return count
+          console.log(count)
 
           let dulplicate = false
           for (let i = 0; i< this.detectedItemList.length;i++){
@@ -153,7 +154,7 @@ export class AutoDetectComponent implements OnInit {
           }
 
           this.detectedItemList.push([classes,parseInt(count),score])
-          console.log("Success")*/
+          console.log("Success")
 
         }
 
@@ -209,19 +210,33 @@ boxes;
   async testNum(img, detector,name){
     let img64 = img.src.replace('data:image/jpeg;base64,','')
     console.log(img64)
+    let numberOfObject
     $.ajax({
       type: 'POST',
-      headers: {"Content-type":"application/x-www-form-urlencoded"},
-      url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN,
+      headers: {'Content-type':'application/x-www-form-urlencoded'},
+      url: this.proxy+'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic',
       data: {
-        "image" : img64,
-        probability : true
+        access_token : this.ACCESS_TOKEN,
+        image : img64,
+        // : true
       },
       success: function (res) {
         console.log(res)
+        let results = JSON.parse(res)
+        let topPro = 0
+        let topRes = -1
+        results["words_result"].forEach(function (result) {
+          if (result["probability"]["average"]>topPro && result["words"].match('[^0-9]') == null){
+            topPro = result["probability"]["average"]
+            topRes = result["words"]
+          }
+        })
+        numberOfObject = topRes;
+        return
       },
-      dataType: 'JSON'
+      //dataType: 'JSON'
     });
+    return numberOfObject
     /*var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
     httpRequest.open('POST', 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN+"&jsoncallback=?", true); //第二步：打开连接
     httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
