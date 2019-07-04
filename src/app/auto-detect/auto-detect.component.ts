@@ -7,6 +7,11 @@ import classesName from "./itemList.js"
 import yolo from 'tfjs-yolo'
 import itemList from "./itemList";
 import * as $ from "jquery";
+import {MdcSnackbarService} from "@blox/material";
+import {FetchService} from "../fetch.service";
+import {Router} from "@angular/router";
+import { MaterialInfo } from '../model/materialinfo';
+import itemName from "./itemNameList.js"
 
 @Component({
   selector: 'app-auto-detect',
@@ -14,12 +19,24 @@ import * as $ from "jquery";
   styleUrls: ['./auto-detect.component.scss']
 })
 export class AutoDetectComponent implements OnInit {
+
   detectedItemList = new Array(new Array())
+<<<<<<< Updated upstream
   private ACCESS_TOKEN = '24.95a895b1b4ca7acf500dc527f0efbb94.2592000.1564725954.282335-16699672'
 
   constructor() { }
+=======
+  private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672'
+  proxy="https://rest.graueneko.xyz/proxy/"
+  ImageLoaded = false
+  mIdx: { [key: string]: MaterialInfo };
+  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService, private router: Router) { }
+>>>>>>> Stashed changes
 
   async ngOnInit() {
+    //testing
+    //this.detectedItemList = [['MTL_SL_DS',2,1],['MTL_SL_RUSH4',3,1],['MTL_SL_KETONE2',3,1],['MTL_SL_BN',2,1],['MTL_SL_RUSH1',3,1],['MTL_SL_STRG4',3,1],['MTL_SKILL2',1,1]]
+
     var loaded = document.getElementById("loadedimg")
     var file = document.querySelector('#test-image-file');
     file.addEventListener('change', previewImage, false);
@@ -98,7 +115,6 @@ export class AutoDetectComponent implements OnInit {
         console.log("Empty!");
         return
       }
-      const numDetect = await yolo.v3tiny('./assets/models/numtfjsnew/model.json')//[21,34 ,27,47 ,29,40 ,32,49 ,25,39 ,23,42]})
       var boxlist = new Array()
       let count = 0
       this.boxes.forEach(box => {
@@ -137,9 +153,15 @@ export class AutoDetectComponent implements OnInit {
         //  count++
           //console.log(changed.src)
 
+<<<<<<< Updated upstream
           let count = await this.testNum(changed,numDetect,classes)
           return count
           /*console.log(count)
+=======
+          let count = await this.testNum(changed,classes)
+          //return count
+          console.log(count)
+>>>>>>> Stashed changes
 
           let dulplicate = false
           for (let i = 0; i< this.detectedItemList.length;i++){
@@ -147,13 +169,18 @@ export class AutoDetectComponent implements OnInit {
               dulplicate=true
               if(this.detectedItemList[i][2]>=score)
                 continue;
-              this.detectedItemList[i][1] = parseInt(count);
+              this.detectedItemList[i][1] = count;
               return
             }
           }
 
+<<<<<<< Updated upstream
           this.detectedItemList.push([classes,parseInt(count),score])
           console.log("Success")*/
+=======
+          this.detectedItemList.push([classes,count,Math.round(score*100)])
+          console.log("Success")
+>>>>>>> Stashed changes
 
         }
 
@@ -161,7 +188,7 @@ export class AutoDetectComponent implements OnInit {
       if(e == TypeError)
         console.error("Nothing Detected");
       else
-        console.error("Unknown Error"+ e);
+        console.error("Unknown Error: "+ e);
     }
 
   };
@@ -206,14 +233,21 @@ boxes;
     this.digitReg()
   }
 
-  async testNum(img, detector,name){
+  async testNum(img,name){
     let img64 = img.src.replace('data:image/jpeg;base64,','')
+<<<<<<< Updated upstream
     console.log(img64)
     $.ajax({
+=======
+    //console.log(img64)
+    let numberOfObject = 0
+    await $.ajax({
+>>>>>>> Stashed changes
       type: 'POST',
       headers: {"Content-type":"application/x-www-form-urlencoded"},
       url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN,
       data: {
+<<<<<<< Updated upstream
         "image" : img64,
         probability : true
       },
@@ -221,6 +255,38 @@ boxes;
         console.log(res)
       },
       dataType: 'JSON'
+=======
+        access_token : this.ACCESS_TOKEN,
+        image : img64,
+        probability:true,
+        language_type:'ENG'
+      },
+      success: function (res) {
+        console.log(res)
+        try {
+          var results = res
+
+        }catch (e) {
+          console.error(e)
+          console.warn(res)
+        }
+        let topPro = 0
+        let topRes = 0
+        results["words_result"].forEach(function (result) {
+          if (result["probability"]["average"]>topPro && result["words"].match('[^0-9]') == null){
+            topPro = result["probability"]["average"]
+            topRes = result["words"]
+          }
+        })
+        numberOfObject = topRes;
+        return
+      },
+      error:function (res) {
+        numberOfObject = 0
+        return
+      }
+      //dataType: 'JSON'
+>>>>>>> Stashed changes
     });
     /*var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
     httpRequest.open('POST', 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN+"&jsoncallback=?", true); //第二步：打开连接
@@ -315,5 +381,58 @@ boxes;
     oA.remove(); // 下载之后把创建的元素删除
   }
 
+  async toMaterialCalc() {
+    if (!this.detectedItemList || this.detectedItemList.length === 0) {
+      this.snackbar.show({
+        message: '材料为空，请先输入需求。',
+        actionText: '好的',
+        multiline: false,
+        actionOnBottom: false
+      });
+      return;
+    }
+    const data = this.fetch.getLocalStorage('m-data', {});
+    if (Object.keys(data).length === 0) {
+      this.snackbar.show({
+        message: '请先打开一次材料计算页面。',
+        actionText: '好的',
+        multiline: false,
+        actionOnBottom: false
+      });
+      return;
+    }
+    for (const m of this.detectedItemList) {
+      if (m[0] == undefined)
+        continue
+      console.log(m[0])
+      try{
+        let name = this.getMaterialInfo(m[0])
+        data[name].have = m[1];
+      }catch (e) {
+        console.error(e)
+        continue
+      }
+    }
+    this.fetch.setLocalStorage('m-data', data);
+    this.fetch.setLocalStorage('m-option', {
+      showOnly3plus: true,
+      filtered: true,
+      showMat: true,
+      showChip: true,
+      showBook: true
+    });
+    this.router.navigateByUrl('/material');
+  }
+
+  getMaterialInfo(name){
+    //itemlist = require('./assets/data/material.json')
+    for(let i = 0;i<itemName.length;i++){
+      if(itemName[i].split(":")[0] == name)
+        return itemName[i].split(":")[1]
+    }
+  }
+
 
 }
+
+

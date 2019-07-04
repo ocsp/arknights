@@ -1,12 +1,32 @@
 <p>
   <input type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg">
-  <button mdcButton raised dense (click)="digitReg()">testOCR</button>
-  <button mdcButton raised dense (click)="testNum()">testNUM</button>
-  <button mdcButton raised dense (click)="testTf()">testTF</button><br>
-  <img src="" id ="loadedimg" alt="等待上传" >
-  <img src="" id = "changed">
+  <button fxHide = true mdcButton raised dense (click)="digitReg()">testOCR</button>
+  <button fxHide = false mdcButton raised dense (click)="getMaterialInfo('MTL_ASC_SUP3')">test</button>
+  <button mdcButton raised dense (click)="testTf()">开始识别</button><br>
+
+  <img fxHide = true src="" id = "changed">
 </p>
+<<<<<<< Updated upstream
 <div fxFlex="100" fxFlex.gt-sm="50%" ngClass.gt-sm="padding-x-1" fxLayout="row" fxLayoutAlign="center start" *ngFor="let item of detectedItemList">
 <p>{{item[0]}}:{{item[1]}}({{item[2]*100}}%)</p><br>
+=======
+
+<div mdcCard fxLayout="row wrap">
+  <div mdcCardActions fullBleed fxFlex="100">
+    <a mdcButton (click)="toMaterialCalc()">
+      保存并导入材料计算器 <i class="material-icons" aria-hidden="true">arrow_forward</i>
+    </a>
+  </div>
+  <div fxLayout="column" fxLayoutGap="100px" fxLayoutAlign="space-between" fxLayout.xs="column"  *ngFor="let item of detectedItemList" >
+    <div *ngIf="item[0]">
+      <li mdcListItem>
+        <img [src]="'./assets/material/'+item[0] +'.png'" sizes="" >
+        <i>{{item[0]}}:{{item[1]}}({{item[2]}}%)</i>
+      </li>
+    </div>
+  </div>
+>>>>>>> Stashed changes
 </div>
+
+<img  src="" id ="loadedimg" alt="等待上传" >
 
