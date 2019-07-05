@@ -21,17 +21,12 @@ import itemName from "./itemNameList.js"
 export class AutoDetectComponent implements OnInit {
 
   detectedItemList = new Array(new Array())
-<<<<<<< Updated upstream
-  private ACCESS_TOKEN = '24.95a895b1b4ca7acf500dc527f0efbb94.2592000.1564725954.282335-16699672'
 
-  constructor() { }
-=======
   private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672'
   proxy="https://rest.graueneko.xyz/proxy/"
   ImageLoaded = false
   mIdx: { [key: string]: MaterialInfo };
   constructor(private fetch: FetchService, private snackbar: MdcSnackbarService, private router: Router) { }
->>>>>>> Stashed changes
 
   async ngOnInit() {
     //testing
@@ -153,8 +148,7 @@ export class AutoDetectComponent implements OnInit {
         //  count++
           //console.log(changed.src)
 
-<<<<<<< Updated upstream
-          let count = await this.testNum(changed,numDetect,classes)
+          let count = await this.testNum(changed,classes)
           return count
           /*console.log(count)
 =======
@@ -177,10 +171,8 @@ export class AutoDetectComponent implements OnInit {
 <<<<<<< Updated upstream
           this.detectedItemList.push([classes,parseInt(count),score])
           console.log("Success")*/
-=======
           this.detectedItemList.push([classes,count,Math.round(score*100)])
           console.log("Success")
->>>>>>> Stashed changes
 
         }
 
@@ -235,27 +227,14 @@ boxes;
 
   async testNum(img,name){
     let img64 = img.src.replace('data:image/jpeg;base64,','')
-<<<<<<< Updated upstream
     console.log(img64)
-    $.ajax({
-=======
     //console.log(img64)
     let numberOfObject = 0
     await $.ajax({
->>>>>>> Stashed changes
       type: 'POST',
       headers: {"Content-type":"application/x-www-form-urlencoded"},
-      url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN,
+      url: this.proxy+'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic',
       data: {
-<<<<<<< Updated upstream
-        "image" : img64,
-        probability : true
-      },
-      success: function (res) {
-        console.log(res)
-      },
-      dataType: 'JSON'
-=======
         access_token : this.ACCESS_TOKEN,
         image : img64,
         probability:true,
@@ -286,7 +265,6 @@ boxes;
         return
       }
       //dataType: 'JSON'
->>>>>>> Stashed changes
     });
     /*var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
     httpRequest.open('POST', 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token='+this.ACCESS_TOKEN+"&jsoncallback=?", true); //第二步：打开连接
@@ -425,7 +403,6 @@ boxes;
   }
 
   getMaterialInfo(name){
-    //itemlist = require('./assets/data/material.json')
     for(let i = 0;i<itemName.length;i++){
       if(itemName[i].split(":")[0] == name)
         return itemName[i].split(":")[1]
