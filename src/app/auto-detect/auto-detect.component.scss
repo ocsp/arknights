@@ -3,7 +3,7 @@ img:not([src]) {
   opacity: 0;
 }
 
-.container {
+.ad-container {
   img {
     width: 100%;
     height: auto;
@@ -11,6 +11,17 @@ img:not([src]) {
   width: 100%;
   max-width: 1200px;
   margin: auto;
+
+  .card-title {
+    max-width: 100%;
+    width: 400;
+    padding: 0.25em;
+    display: block;
+  }
+}
+
+[mdcCard] {
+  margin: 0.5em;
 
   .mat-icon {
     max-height: 48px;
@@ -21,14 +32,4 @@ img:not([src]) {
   .matcard-item {
     padding: 0.25em;
   }
-}
-
-[mdcCard] {
-  margin: 0.5em;
-}
-.card-title {
-  max-width: 100%;
-  width: 400;
-  padding: 0.25em;
-  display: block;
 }

@@ -34,6 +34,8 @@
   @include mdc-theme-prop(color, text-primary-on-background);
 
   max-width: 1400px;
+  width: 100%;
+  margin: auto;
   padding-top: calc(0.5em + env(safe-area-inset-top));
   padding-right: calc(0.5em + env(safe-area-inset-right));
   padding-bottom: calc(0.5em + env(safe-area-inset-bottom));
