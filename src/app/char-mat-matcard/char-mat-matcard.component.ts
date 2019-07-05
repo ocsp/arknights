@@ -4,7 +4,6 @@ import { FetchService } from '../fetch.service';
 import { Router } from '@angular/router';
 import { MdcSnackbarService } from '@blox/material';
 
-
 @Component({
   selector: 'app-char-mat-matcard',
   templateUrl: './char-mat-matcard.component.html',
