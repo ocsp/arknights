@@ -11,15 +11,24 @@ img:not([src]) {
   width: 100%;
   max-width: 1200px;
   margin: auto;
-}
 
+  .mat-icon {
+    max-height: 48px;
+    max-width: 48px;
+    height: auto;
+    width: auto;
+  }
+  .matcard-item {
+    padding: 0.25em;
+  }
+}
 
 [mdcCard] {
   margin: 0.5em;
 }
-.mat-icon {
-  max-height: 100px;
-  max-width: 100px;
-  height: auto;
-  width: auto;
+.card-title {
+  max-width: 100%;
+  width: 400;
+  padding: 0.25em;
+  display: block;
 }

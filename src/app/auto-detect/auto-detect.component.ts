@@ -22,7 +22,8 @@ export class AutoDetectComponent implements OnInit {
   mIdx: { [key: string]: MaterialInfo };
   items = [];
   boxes;
-  private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672'; // Need to be updated every 30 days
+  // Need to be updated every 30 days
+  private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672';
 
   constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router) {
   }
@@ -38,7 +39,7 @@ export class AutoDetectComponent implements OnInit {
     ['MTL_SKILL2',1,1]]*/
 
     const loaded = document.getElementById('loadedimg');
-    const display = document.getElementById('display')
+    const display = document.getElementById('display');
     const file = document.querySelector('#test-image-file');
     file.addEventListener('change', previewImage, false);
 
