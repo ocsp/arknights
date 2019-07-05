@@ -1,1 +1,25 @@
-img[src=""],img:not([src]){opacity:0;}
+img[src=""],
+img:not([src]) {
+  opacity: 0;
+}
+
+.container {
+  img {
+    width: 100%;
+    height: auto;
+  }
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+[mdcCard] {
+  margin: 0.5em;
+}
+.mat-icon {
+  max-height: 100px;
+  max-width: 100px;
+  height: auto;
+  width: auto;
+}
