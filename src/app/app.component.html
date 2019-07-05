@@ -53,15 +53,17 @@
 <header mdcToolbar>
   <div mdcToolbarRow>
     <section mdcToolbarSection alignStart>
-      <a mdcToolbarIcon class="material-icons" (click)="toggleDrawer()">menu</a>
-      <a href="/"><div class="toolbar-titles"><img class="img-title" src="../assets/icons/icon-192x192.png" /></div></a>
-      <div fxLayout="row" fxShow="false" fxShow.gt-md="true" class="toolbar-titles">
-        <span><a mdcToolbarTitle routerLink="/" routerLinkActive="router-active">明日方舟工具箱</a></span>
-        <span><a mdcToolbarTitle routerLink="/hr" routerLinkActive="router-active">公开招募</a></span>
-        <span><a mdcToolbarTitle routerLink="/lvlup" routerLinkActive="router-active">升级计算</a></span>
-        <span><a mdcToolbarTitle routerLink="/material" routerLinkActive="router-active">精英材料</a></span>
-        <span><a mdcToolbarTitle routerLink="/charmat" routerLinkActive="router-active">干员材料</a></span>
-        <span><a mdcToolbarTitle routerLink="/autodetect" routerLinkActive="router-active">自动导入(beta)</a></span>
+      <div mdcToolbarRow>
+        <a mdcToolbarIcon class="material-icons" (click)="toggleDrawer()">menu</a>
+        <a href="/"><div class="toolbar-titles"><img class="img-title" src="../assets/icons/icon-192x192.png" /></div></a>
+        <div fxLayout="row" fxShow="false" fxShow.gt-md="true" class="toolbar-titles">
+          <span><a mdcToolbarTitle routerLink="/" routerLinkActive="router-active">明日方舟工具箱</a></span>
+          <span><a mdcToolbarTitle routerLink="/hr" routerLinkActive="router-active">公开招募</a></span>
+          <span><a mdcToolbarTitle routerLink="/lvlup" routerLinkActive="router-active">升级计算</a></span>
+          <span><a mdcToolbarTitle routerLink="/material" routerLinkActive="router-active">精英材料</a></span>
+          <span><a mdcToolbarTitle routerLink="/charmat" routerLinkActive="router-active">干员材料</a></span>
+          <span><a mdcToolbarTitle routerLink="/autodetect" routerLinkActive="router-active">自动导入(beta)</a></span>
+        </div>
       </div>
     </section>
     <section mdcToolbarSection alignEnd>
