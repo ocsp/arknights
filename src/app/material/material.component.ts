@@ -159,7 +159,7 @@ export class MaterialComponent implements OnInit {
       }
       this.data = ldata;
       this.items = items.sort((a, b) => {
-        return a.rarity > b.rarity ? -1 : (a.rarity < b.rarity ? 1 : (a.id > b.id) ? -1 : (a.id < b.id ? 1 : 0));
+        return a.sort > b.sort ? 1 : (a.sort < b.sort ? -1 : 0);
       });
       this.calc();
     });
