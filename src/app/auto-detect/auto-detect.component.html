@@ -1,8 +1,8 @@
 <p>
   <input type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg">
   <button fxHide = true mdcButton raised dense (click)="digitReg()">testOCR</button>
-  <button fxHide = false mdcButton raised dense (click)="getMaterialInfo('MTL_ASC_SUP3')">test</button>
-  <button mdcButton raised dense (click)="testTf()">开始识别</button><br>
+  <button fxHide = true mdcButton raised dense (click)="getMaterialInfo('MTL_ASC_SUP3')">test</button>
+  <button mdcButton raised dense (click)="objectRegonition()">开始识别</button><br>
   <img fxHide = true src="" id = "changed">
 <div mdcCard fxLayout="row wrap">
   <div mdcCardActions fullBleed fxFlex="100">
@@ -14,7 +14,7 @@
     <div *ngIf="item[0]">
       <li mdcListItem>
         <img [src]="'./assets/material/'+item[0] +'.png'" sizes="" >
-        <i>{{item[0]}}:{{item[1]}}({{item[2]}}%)</i>
+        <i>{{this.getMaterialInfo(item[0])}} : {{item[1]}} ({{item[2]}}%)</i>
       </li>
     </div>
   </div>
