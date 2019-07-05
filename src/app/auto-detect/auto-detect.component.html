@@ -16,7 +16,6 @@
       <a href="https://github.com/Luke-lujunxian/aktools/blob/auto-fillin/HOWTOHELP.md">识别率低？</a>
     </div>
   </div>
-  <img fxHide=true src="" id="changed">
   <div mdcCard fxLayout="row wrap">
     <div mdcCardActions fullBleed fxFlex="100">
       <a mdcButton (click)="toMaterialCalc()">
@@ -39,6 +38,8 @@
       </ng-container>
   </div>
 
-  <img src="" id="loadedimg" alt="等待上传">
+  <img fxHide=false style="width: 100%; height: 100%" src="" id="display" alt="等待上传">
 
 </div>
+<img fxHide=true style="width: 100%; height: 100%" src="" id="loadedimg" alt="等待上传">
+<img fxHide=true src="" id="changed">

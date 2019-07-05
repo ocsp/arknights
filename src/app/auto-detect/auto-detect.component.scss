@@ -2,15 +2,17 @@ img[src=""],
 img:not([src]) {
   opacity: 0;
 }
-img {
-  width: 100%;
-  height: auto;
-}
+
 .container {
+  img {
+    width: 100%;
+    height: auto;
+  }
   width: 100%;
   max-width: 1200px;
   margin: auto;
 }
+
 
 [mdcCard] {
   margin: 0.5em;

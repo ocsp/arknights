@@ -29,15 +29,16 @@ export class AutoDetectComponent implements OnInit {
 
   async ngOnInit() {
     // TestONLY
-    /* this.detectedItemList = [['MTL_SL_DS',2,1],
+    /*this.detectedItemList = [['MTL_SL_DS',2,1],
     ['MTL_SL_RUSH4',3,1],
     ['MTL_SL_KETONE2',3,1],
     ['MTL_SL_BN',2,1],
     ['MTL_SL_RUSH1',3,1],
     ['MTL_SL_STRG4',3,1],
-    ['MTL_SKILL2',1,1]] */
+    ['MTL_SKILL2',1,1]]*/
 
     const loaded = document.getElementById('loadedimg');
+    const display = document.getElementById('display')
     const file = document.querySelector('#test-image-file');
     file.addEventListener('change', previewImage, false);
 
@@ -48,6 +49,8 @@ export class AutoDetectComponent implements OnInit {
         console.log('loaded');
         // @ts-ignore
         (loaded as HTMLImageElement).src = e.target.result;
+        // @ts-ignore
+        (display as HTMLImageElement).src = e.target.result;
       };
       reader.readAsDataURL(event.target.files[0]);
     }
