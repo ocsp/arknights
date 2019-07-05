@@ -6,7 +6,6 @@ import {MdcSnackbarService} from "@blox/material";
 import {FetchService} from "../fetch.service";
 import {Router} from "@angular/router";
 import {MaterialInfo} from '../model/materialinfo';
-import itemName from "./itemNameList.js"
 
 //TODO:可调整识别结果
 
@@ -21,10 +20,11 @@ export class AutoDetectComponent implements OnInit {
   proxy = "https://rest.graueneko.xyz/proxy/"
   ImageLoaded = false
   mIdx: { [key: string]: MaterialInfo };
+  items = []
   boxes;
   private ACCESS_TOKEN = '24.d13d0147a0c455d1ff0ad9e6cffb9d03.2592000.1564799928.282335-16699672'//Need to be updated every 30 days
 
-  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService, private router: Router) {
+  constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router) {
   }
 
   async ngOnInit() {
@@ -45,6 +45,15 @@ export class AutoDetectComponent implements OnInit {
       };
       reader.readAsDataURL(event.target.files[0]);
     }
+
+    this.fetchService.getJson('./assets/data/material.json').subscribe(data => {
+      this.items = [];
+      for (const k in data) {
+        if (data[k]) {
+          this.items.push(data[k])
+          }
+        }
+      })
 
   }
 
@@ -233,7 +242,7 @@ export class AutoDetectComponent implements OnInit {
       });
       return;
     }
-    const data = this.fetch.getLocalStorage('m-data', {});
+    const data = this.fetchService.getLocalStorage('m-data', {});
     if (Object.keys(data).length === 0) {
       this.snackbar.show({
         message: '请先打开一次材料计算页面。',
@@ -249,14 +258,16 @@ export class AutoDetectComponent implements OnInit {
       console.log(m[0])
       try {
         let name = this.getMaterialInfo(m[0])
+        if (name == m[0])
+          continue
         data[name].have = m[1];
       } catch (e) {
         console.error(e)
         continue
       }
     }
-    this.fetch.setLocalStorage('m-data', data);
-    this.fetch.setLocalStorage('m-option', {
+    this.fetchService.setLocalStorage('m-data', data);
+    this.fetchService.setLocalStorage('m-option', {
       showOnly3plus: true,
       filtered: true,
       showMat: true,
@@ -267,10 +278,15 @@ export class AutoDetectComponent implements OnInit {
   }
 
   getMaterialInfo(name) {
-    for (let i = 0; i < itemName.length; i++) {
-      if (itemName[i].split(":")[0] == name)
-        return itemName[i].split(":")[1]
-    }
+      for (const k in this.items) {
+        if (this.items[k]) {
+          if(this.items[k].icon == name){
+            return this.items[k].name
+          }
+        }
+      }
+      //console.warn("Unable to find proper name")
+      return name
   }
 
 
