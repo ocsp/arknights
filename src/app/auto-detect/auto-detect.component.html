@@ -1,25 +1,44 @@
-<p>
-  <input type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg">
-  <button fxHide = true mdcButton raised dense (click)="digitReg()">testOCR</button>
-  <button fxHide = true mdcButton raised dense (click)="getMaterialInfo('MTL_ASC_SUP3')">test</button>
-  <button mdcButton raised dense (click)="objectRegonition()">开始识别</button><br>
-  <a href ="https://github.com/Luke-lujunxian/aktools/blob/auto-fillin/HOWTOHELP.md">识别率低？</a>
-  <img fxHide = true src="" id = "changed">
-<div mdcCard fxLayout="row wrap">
-  <div mdcCardActions fullBleed fxFlex="100">
-    <a mdcButton (click)="toMaterialCalc()">
-      保存并导入材料计算器 <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </a>
-  </div>
-  <div fxLayout="column" fxLayoutGap="100px" fxLayoutAlign="space-between" fxLayout.xs="column"  *ngFor="let item of detectedItemList" >
-    <div *ngIf="item[0]">
-      <li mdcListItem>
-        <img [src]="'./assets/img/material/'+item[0] +'.png'" sizes="" >
-        <i>{{this.getMaterialInfo(item[0])}} : {{item[1]}} ({{item[2]}}%)</i>
-      </li>
+<div class="container">
+
+  <div mdcCard fxLayout="row wrap">
+    <div fxFlex="100" fxLayout="row wrap">
+      <button mdcButton raised dense type="button" (click)="fileInput.click()">
+        选择仓库图片
+      </button>
+      <input #fileInput type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg"
+        style="display:none;">
+      <button fxHide=true mdcButton raised dense (click)="digitReg()">testOCR</button>
+      <button fxHide=true mdcButton raised dense (click)="getMaterialInfo('MTL_ASC_SUP3')">test</button>
+    </div>
+    <hr mdcListDivider>
+    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="space-between center">
+      <button mdcButton raised dense (click)="objectRegonition()">开始识别</button><br>
+      <a href="https://github.com/Luke-lujunxian/aktools/blob/auto-fillin/HOWTOHELP.md">识别率低？</a>
     </div>
   </div>
+  <img fxHide=true src="" id="changed">
+  <div mdcCard fxLayout="row wrap">
+    <div mdcCardActions fullBleed fxFlex="100">
+      <a mdcButton (click)="toMaterialCalc()">
+        保存并导入材料计算器 <i class="material-icons" aria-hidden="true">arrow_forward</i>
+      </a>
+    </div>
+
+    <ng-container *ngFor="let m of detectedItemList">
+        <div *ngIf="m[0]" class="matcard-item" fxFlex="25" fxFlex.gt-xs="16" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="matcard-item-image">
+            <img class="mat-icon" src="../../assets/img/material/{{m[0]}}.png" />
+          </div>
+          <div class="mat-card-item-title">
+            <p>{{this.getMaterialInfo(m[0])}}</p>
+          </div>
+          <div class="mat-card-item-need">
+            <p>{{m[1]}}</p>
+          </div>
+        </div>
+      </ng-container>
+  </div>
+
+  <img src="" id="loadedimg" alt="等待上传">
+
 </div>
-
-<img  src="" id ="loadedimg" alt="等待上传" >
-
