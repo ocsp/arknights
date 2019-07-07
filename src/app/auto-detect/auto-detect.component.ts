@@ -183,7 +183,7 @@ export class AutoDetectComponent implements OnInit {
         console.log(res);
         const results = res;
         let topPro = 0;
-        let topRes = 0;
+        let topRes = 1;
         results.words_result.forEach((result) => {
           if (result.probability.average > topPro && result.words.match('[^0-9]') == null) {
             topPro = result.probability.average;
@@ -193,7 +193,7 @@ export class AutoDetectComponent implements OnInit {
         numberOfObject = topRes;
       },
       error(res) {
-        numberOfObject = 0;
+        numberOfObject = 1;
       }
       // dataType: 'JSON'
     });
