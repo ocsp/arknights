@@ -34,7 +34,8 @@
     "tslib": "^1.9.0",
     "typings": "^2.1.1",
     "zone.js": "~0.9.1",
-    "tfjs-yolo": "^0.0.4"
+    "tfjs-yolo": "^0.0.4",
+    "vintagejs": "2.2.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.800.0",

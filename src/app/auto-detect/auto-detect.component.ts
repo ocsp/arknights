@@ -6,6 +6,7 @@ import { MdcSnackbarService } from '@blox/material';
 import { FetchService } from '../fetch.service';
 import { Router } from '@angular/router';
 import { MaterialInfo } from '../model/materialinfo';
+import vintagejs from "vintagejs"
 
 // TODO:可调整识别结果
 
@@ -167,7 +168,15 @@ export class AutoDetectComponent implements OnInit {
   }
 
   async getNumbyAPI(img, name) {
-    const img64 = img.src.replace('data:image/jpeg;base64,', '');
+    const effect = {
+      contrast: 0.5,
+      saturation:0
+    }
+    var img64 = img.src.replace('data:image/jpeg;base64,', '');
+    vintagejs(img64, effect)
+      .then(res => {
+        img64 = res.getDataURL();
+      });
     // console.log(img64)
     let numberOfObject = 0;
     await $.ajax({
@@ -184,7 +193,7 @@ export class AutoDetectComponent implements OnInit {
         console.log(res);
         const results = res;
         let topPro = 0;
-        let topRes = 0;
+        let topRes = 1;
         results.words_result.forEach((result) => {
           if (result.probability.average > topPro && result.words.match('[^0-9]') == null) {
             topPro = result.probability.average;
@@ -194,7 +203,7 @@ export class AutoDetectComponent implements OnInit {
         numberOfObject = topRes;
       },
       error(res) {
-        numberOfObject = 0;
+        numberOfObject = 1;
       }
       // dataType: 'JSON'
     });
