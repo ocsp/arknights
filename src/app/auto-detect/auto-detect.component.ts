@@ -170,9 +170,9 @@ export class AutoDetectComponent implements OnInit {
   async getNumbyAPI(img, name) {
     const effect = {
       contrast: 0.5,
-      saturation:0
-    }
-    var img64 = img.src.replace('data:image/jpeg;base64,', '');
+      saturation: 0
+    };
+    let img64 = img.src;
     vintagejs(img64, effect)
       .then(res => {
         img64 = res.getDataURL();
@@ -185,7 +185,7 @@ export class AutoDetectComponent implements OnInit {
       url: this.proxy + 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic',
       data: {
         access_token: this.ACCESS_TOKEN,
-        image: img64,
+        image: img64.replace('data:image/jpeg;base64,', ''),
         probability: true,
         language_type: 'ENG'
       },
