@@ -186,7 +186,8 @@ export class MaterialComponent implements OnInit {
         }
       }
     }
-    this.planResult = this.fetchService.postJson('https://ak.inva.land/plan/', { owned, required })
+    this.planResult = this.fetchService.postJson('https://ak.inva.land/plan/',
+      { owned, required, exp_demand: false, extra_outc: false, gold_demand: false })
       .subscribe(plan => {
         this.cost = plan && plan.cost ? plan.cost : 0;
         const stage = plan && plan.stages && plan.stages.length !== 0 ? [...plan.stages] : [];
@@ -194,21 +195,21 @@ export class MaterialComponent implements OnInit {
         this.stagesText = [];
         this.synsText = [];
         for (const st of stage) {
-          const text = st.count + ' - [' + st.stage + '] - ';
+          const text = '[' + st.stage + '] x' + st.count + ' - ';
           const itemsText = [];
           for (const it in st.items) {
             if (st.items[it]) {
-              itemsText.push(it + ': ' + st.items[it]);
+              itemsText.push(it + ' x' + st.items[it]);
             }
           }
           this.stagesText.push(text + itemsText.join(', '));
         }
         for (const syn of syns) {
-          const text = syn.count + ' - [' + syn.target + '] - ';
+          const text = '[' + syn.target + '] x' + syn.count + ' - ';
           const itemsText = [];
           for (const it in syn.materials) {
             if (syn.materials[it]) {
-              itemsText.push(it + ': ' + syn.materials[it]);
+              itemsText.push(it + ' x' + syn.materials[it]);
             }
           }
           this.synsText.push(text + itemsText.join(', '));
