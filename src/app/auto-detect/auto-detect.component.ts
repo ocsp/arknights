@@ -17,6 +17,7 @@ import vintagejs from "vintagejs"
 })
 export class AutoDetectComponent implements OnInit {
 
+
   detectedItemList = new Array(new Array());
   proxy = 'https://rest.graueneko.xyz/proxy/';
   ImageLoaded = false;
@@ -104,8 +105,10 @@ export class AutoDetectComponent implements OnInit {
 
         const size = Math.max(Math.ceil(width), Math.ceil(height));
         // @ts-ignore
+
         changed.src = await this.getImagePortion(loaded, size, size, Math.ceil(left), Math.ceil(top), 1);
         const count = await this.getNumbyAPI(changed, classes);
+
 
         let dulplicate = false;
         for (const item of this.detectedItemList) {
@@ -167,6 +170,7 @@ export class AutoDetectComponent implements OnInit {
 
   }
 
+
   async getNumbyAPI(img, name) {
     const effect = {
       contrast: 0.5,
@@ -204,6 +208,7 @@ export class AutoDetectComponent implements OnInit {
       },
       error(res) {
         numberOfObject = 1;
+
       }
       // dataType: 'JSON'
     });
