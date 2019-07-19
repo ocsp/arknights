@@ -29,13 +29,13 @@ export class AutoDetectComponent implements OnInit {
 
   async ngOnInit() {
     // TestONLY
-    this.detectedItemList = [['MTL_SL_DS',2,1],
+    /*this.detectedItemList = [['MTL_SL_DS',2,1],
     ['MTL_SL_RUSH4',3,1],
     ['MTL_SL_KETONE2',3,1],
     ['MTL_SL_BN',2,1],
     ['MTL_SL_RUSH1',3,1],
     ['MTL_SL_STRG4',3,1],
-    ['MTL_SKILL2',1,1]]
+    ['MTL_SKILL2',1,1]]*/
 
     const loaded = document.getElementById('loadedimg');
     const display = document.getElementById('display');
@@ -93,6 +93,8 @@ export class AutoDetectComponent implements OnInit {
         //console.log(res)
         for(let i = 0;i<resultList.length;i++){
           let dulplicate = false;
+          if(isNaN(resultList[i][2]))
+            resultList[i][2] = 1
           for (let j = 0;j<this.detectedItemList.length;j++) {
             if (this.detectedItemList[j][0] === resultList[i][0]) {
               dulplicate = true;
@@ -182,9 +184,6 @@ export class AutoDetectComponent implements OnInit {
     }
     // console.warn("Unable to find proper name")
     return name;
-  }
-  update(item){
-
   }
 
 }
