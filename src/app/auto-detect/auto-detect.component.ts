@@ -73,8 +73,7 @@ export class AutoDetectComponent implements OnInit {
 
           ctx.drawImage(img, 0, 0, width, height);
           this.imageSrc = canvas.toDataURL('image/jpeg');
-          console.log(this.imageSrc);
-        }
+        };
       };
       reader.readAsDataURL(event.target.files[0]);
     }
