@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import classesName from './itemList.js';
-import yolo from 'tfjs-yolo';
-import * as $ from 'jquery';
 import { MdcSnackbarService } from '@blox/material';
 import { FetchService } from '../fetch.service';
 import { Router } from '@angular/router';
 import { MaterialInfo } from '../model/materialinfo';
-import vintagejs from "vintagejs"
 
 // TODO:可调整识别结果
 
@@ -18,11 +14,13 @@ import vintagejs from "vintagejs"
 export class AutoDetectComponent implements OnInit {
 
 
-  detectedItemList = new Array(new Array());
+  detectedItemList = [];
   ImageLoaded = false;
   mIdx: { [key: string]: MaterialInfo };
   items = [];
   boxes;
+  imageSrc;
+  resultList = [];
 
   constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router) {
   }
@@ -37,23 +35,6 @@ export class AutoDetectComponent implements OnInit {
     ['MTL_SL_STRG4',3,1],
     ['MTL_SKILL2',1,1]]*/
 
-    const loaded = document.getElementById('loadedimg');
-    const display = document.getElementById('display');
-    const file = document.querySelector('#test-image-file');
-    file.addEventListener('change', previewImage, false);
-
-    // 图片预览
-    function previewImage(event) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        console.log('loaded');
-        // @ts-ignore
-        (loaded as HTMLImageElement).src = e.target.result;
-        // @ts-ignore
-        (display as HTMLImageElement).src = e.target.result;
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
 
     this.fetchService.getJson('./assets/data/material.json').subscribe(data => {
       this.items = [];
@@ -66,55 +47,73 @@ export class AutoDetectComponent implements OnInit {
 
   }
 
+  // 图片预览
+  previewImage(event) {
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        // const image: HTMLImageElement = document.createElement("img");
+        // image.src = reader.r;
+        const img = new Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxSize = 1200;
+
+          // calculate new size
+          const width = img.width > img.height ? maxSize : (maxSize * img.width / img.height);
+          const height = img.width > img.height ? (maxSize * img.height / img.width) : maxSize;
+
+          // resize the canvas to the new dimensions
+          canvas.width = width;
+          canvas.height = height;
+
+          // scale & draw the image onto the canvas
+
+          ctx.drawImage(img, 0, 0, width, height);
+          this.imageSrc = canvas.toDataURL('image/jpeg');
+          console.log(this.imageSrc);
+        }
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
 
   async objectRegonition() {
-    const loaded = document.getElementById('loadedimg');
-    // @ts-ignore
-    var img64 = loaded.src
-    var resultList = []
-    await $.ajax({
-      type: 'POST',
-      headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-      url: 'https://rest.graueneko.xyz/aktools/detect',
-      data: {
-        image: img64
-      },
-      success:function(res) {
-        if(resultList['error']){
-          console.warn("Server Internal Error")
-          this.snackbar.show({
-              message: '服务器内部错误，请重试',
-            actionText: '好的',
-            multiline: false,
-            actionOnBottom: false
-          });
-        }
-        resultList = res['itemList']
-        //console.log(res)
-        for(let i = 0;i<resultList.length;i++){
-          let dulplicate = false;
-          if(isNaN(resultList[i][2]))
-            resultList[i][2] = 1
-          for (let j = 0;j<this.detectedItemList.length;j++) {
-            if (this.detectedItemList[j][0] === resultList[i][0]) {
-              dulplicate = true;
-              if (this.detectedItemList[j][2] >= resultList[i][2]) {
-                continue;
-              }
-              this.detectedItemList[j][2] = resultList[i][2]
-              this.detectedItemList[j][1] = resultList[i][1];
-              return;
-            }
-          }
-          this.detectedItemList.push(resultList[i]);
-        }
-
-      },
-      error:function(res) {
-        // @ts-ignore
-        alert('错误:'+res.status + " " + res.statusText)
+    this.fetchService.postJson('https://rest.graueneko.xyz/aktools/detect', {
+      image: this.imageSrc
+    }).subscribe(result => {
+      if (result.error) {
+        this.snackbar.show({
+          message: '服务器内部错误，请重试',
+          actionText: '好的',
+          multiline: false,
+          actionOnBottom: false
+        });
+        return;
       }
-      // dataType: 'JSON'
+      const resultList = result.itemList;
+      for (const item of resultList) {
+        let dulplicate = false;
+        if (isNaN(item[2])) {
+          item[2] = 1;
+        }
+        for (const existed of this.detectedItemList) {
+          if (existed[0] === item[0]) {
+            dulplicate = true;
+            if (existed[2] < item[2]) {
+              existed[2] = item[2];
+              existed[1] = item[1];
+            }
+            break;
+          }
+        }
+        if (!dulplicate) {
+          this.detectedItemList.push(item);
+        }
+      }
     });
   }
 
