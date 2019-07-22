@@ -1,3 +1,4 @@
+
 <div class="ad-container" fxLayout="column">
 
   <div mdcCard class="card-title" fxLayout="row wrap" fxLayoutAlign="center center">
@@ -25,11 +26,33 @@
             <p>{{this.getMaterialInfo(m[0])}}</p>
           </div>
           <div class="mat-card-item-need">
-            <p>{{m[1]}}</p>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+
+              <div fxFlex="49" mdcTextField dense class="input-field">
+                <span>
+                  <button mdcButton dense (click)="m[1]=m[1]-(m[1]>0?1:0)">
+                    <i mdcButtonIcon class="material-icons">remove</i>
+                  </button>
+                </span>
+                          <span>
+                  <input mdcTextFieldInput #input1="ngModel" type="number" [(ngModel)]="m[1]">
+                  <label mdcFloatingLabel class="mdc-floating-label--float-above">识别结果</label>
+                </span>
+                          <span>
+                  <button mdcButton dense (click)="m[1]=m[1]+1">
+                    <i mdcButtonIcon class="material-icons">add</i>
+                  </button>
+                </span>
+              </div>
+
+            <p fxHide=true>{{m[1]}}</p>
           </div>
         </div>
+        </div>
       </ng-container>
+
   </div>
+
 
   <img fxHide=false style="width: 100%; height: 100%" src="" id="display" alt="等待上传">
 
