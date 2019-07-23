@@ -6,7 +6,7 @@
     </button>
     <input #fileInput type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg"
       (change)="previewImage($event)" style="display:none;">
-    <button mdcButton raised dense (click)="objectRegonition()">开始识别</button><br>
+    <button mdcButton raised dense [disabled]="!imageSrc" (click)="objectRegonition()">开始识别</button><br>
     <a href="https://github.com/Luke-lujunxian/aktools/blob/auto-fillin/HOWTOHELP.md"><small>识别率低/识别出错？</small></a>
   </div>
   <div mdcCard fxLayout="row wrap">
