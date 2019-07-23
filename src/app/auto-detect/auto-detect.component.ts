@@ -81,7 +81,7 @@ export class AutoDetectComponent implements OnInit {
 
 
   async objectRegonition() {
-    this.fetchService.postJson('https://rest.graueneko.xyz/aktools/detect', {
+    this.fetchService.postJson('https://rest.graueneko.xyz:1443/aktools/detect', {
       image: this.imageSrc
     }).subscribe(result => {
       if (result.error) {
