@@ -1,0 +1,23 @@
+<div class="ad-containr" fxLayout="column">
+
+  <div mdcCard class="card-title" fxLayout="row wrap" fxLayoutAlign="center center">
+    <button mdcButton raised dense type="button" (click)="fileInput.click()">
+      选择仓库图片
+    </button>
+    <input #fileInput type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg"
+      (change)="choiceImage($event)" style="display:none;">
+    <button mdcButton raised dense [disabled]="!ImageLoaded" (click)="objectRegonition()">开始识别</button><br>
+  </div>
+  <div mdcCard fxLayout="row wrap">
+    <div mdcCardActions fullBleed fxFlex="100">
+      <a mdcButton (click)="toMaterialCalc()">
+        保存并导入材料计算器 <i class="material-icons" aria-hidden="true">arrow_forward</i>
+      </a>
+    </div>
+  </div>
+  <div mdcCard>
+    <p style="text-align:center;margin:5px auto;">{{InfoText}}</p>
+  </div>
+  <div mdcLinearProgress [progressValue]="progress" bufferValue="1"></div>
+  <canvas style="margin:0 auto;">浏览器不支持Canvas 建议您换用最新版的Chrome/Firefox浏览器</canvas>
+</div>
