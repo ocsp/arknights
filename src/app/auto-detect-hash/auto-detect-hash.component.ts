@@ -25,7 +25,7 @@ export class AutoDetectHashComponent implements OnInit {
     YBound = [];
     ItemGreyData = [];
     ItemHash = [];
-    ImageGreyData={};
+    ImageGreyData = {};
     constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router, private el: ElementRef) {
     }
 
@@ -56,16 +56,16 @@ export class AutoDetectHashComponent implements OnInit {
         const ImageContainer = event.target;
         const Reader = new FileReader();
         Reader.onload = e => {
-            this.LoadImage(Reader.result);
+            this.LoadImage(Reader.result.toString());
         };
         Reader.readAsDataURL(ImageContainer.files[0]);
         this.XBound = [];
         this.YBound = [];
         this.ItemGreyData = [];
         this.detectedItemList = [];
-        this.ItemHash=[];
+        this.ItemHash = [];
     }
-    LoadImage(src) {
+    LoadImage(src: string) {
         this.ImageElement.src = src;
         this.ImageElement.onload = () => {
             this.setProgress('等待处理', 0);
@@ -103,8 +103,10 @@ export class AutoDetectHashComponent implements OnInit {
                 TempCanvas.height = 8;
                 const TempCtx = TempCanvas.getContext('2d');
                 for (let y = 0, YAll = this.YBound.length; y < YAll; y++) {
+                    if (this.YBound[y].length !== 2 ) { continue; }
                     this.ItemGreyData.push([]);
                     for (let x = 0, XAll = this.XBound.length; x < XAll; x++) {
+                        if (this.XBound[x].length !== 2 ) { continue; }
                         // tslint:disable-next-line: max-line-length
                         TempCtx.drawImage(this.ImageElement, this.XBound[x][0], this.YBound[y][0], this.XBound[x][1] - this.XBound[x][0], this.YBound[y][1] - this.YBound[y][0], 0, 0, TempCanvas.width, TempCanvas.height);
                         const TempImageData = TempCtx.getImageData(0, 0, TempCanvas.width, TempCanvas.height).data;
@@ -124,35 +126,36 @@ export class AutoDetectHashComponent implements OnInit {
             }, 50);
         });
     }
-    genHash(){
+    genHash() {
         return new Promise((resolve, reject) => {
             this.setProgress('正在计算Hash(请耐心等待)', 0.65);
             setTimeout(() => {
-                for (let ya=0,YaAll=this.ItemGreyData.length;ya<YaAll;ya++){
+                for (let ya = 0, YaAll = this.ItemGreyData.length; ya < YaAll; ya++) {
                     this.ItemHash.push([]);
-                    for (let xa=0,XaAll=this.ItemGreyData[ya].length;xa<XaAll;xa++){
-                        let hash="";
-                        for(let yb=0,YbAll=this.ItemGreyData[ya][xa].length;yb<YbAll;yb++) {
-                            for(let xb=0,XbAll=this.ItemGreyData[ya][xa][yb].length;xb<XbAll - 1;xb++) {
-                                hash+=(this.ItemGreyData[ya][xa][yb][xb] > this.ItemGreyData[ya][xa][yb][xb+1] ? "1" : "0")
+                    for (let xa = 0, XaAll = this.ItemGreyData[ya].length; xa < XaAll; xa++) {
+                        let hash = '';
+                        for (let yb = 0, YbAll = this.ItemGreyData[ya][xa].length; yb < YbAll; yb++) {
+                            for (let xb = 0, XbAll = this.ItemGreyData[ya][xa][yb].length; xb < XbAll - 1; xb++) {
+                                hash += (this.ItemGreyData[ya][xa][yb][xb] > this.ItemGreyData[ya][xa][yb][xb + 1] ? '1' : '0');
                             }
                         }
-                        this.ItemHash[ya][xa]=hash;
+                        this.ItemHash[ya][xa] = hash;
                     }
                 }
                 resolve();
-            },50);
+            }, 50);
         });
     }
-    getPixelGrey(x, y) {
+    getPixelGrey(x: number, y: number) {
         if (x < 0 || y < 0 || x > this.Canvas.width || y > this.Canvas.height) { return -1; }
-        if(typeof this.ImageGreyData[y*10000+x]!="undefined") {
-            return this.ImageGreyData[y*10000+x];
+        const offset = y * 10000 + x;
+        if (typeof this.ImageGreyData[offset] !== 'undefined') {
+            return this.ImageGreyData[offset];
         }
         const index = (y * this.Canvas.width + x) * 4;
         // tslint:disable-next-line: max-line-length
-        this.ImageGreyData[y*10000+x] = Math.floor((this.ImageData.data[index] + this.ImageData.data[index + 1] + this.ImageData.data[index + 2]) / 3);
-        return this.ImageGreyData[y*10000+x];
+        this.ImageGreyData[offset] = Math.floor((this.ImageData.data[index] + this.ImageData.data[index + 1] + this.ImageData.data[index + 2]) / 3);
+        return this.ImageGreyData[offset];
     }
     searchBoundary() {
         this.setProgress('扫描图像边界', 0.2);
@@ -160,7 +163,7 @@ export class AutoDetectHashComponent implements OnInit {
         const YBlank = Array(this.Canvas.height).fill(0);
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                //console.time("a");
+                // console.time("a");
                 for (let y = 100; y < this.Canvas.height; y++) {
                     for (let x = 15; x < this.Canvas.width - 1; x++) {
                         const GreyList = [
@@ -188,8 +191,8 @@ export class AutoDetectHashComponent implements OnInit {
                         }
                     }
                 }
-                this.ImageGreyData={};
-                //console.timeEnd("a");
+                this.ImageGreyData = {};
+                // console.timeEnd("a");
                 resolve();
             }, 50);
         }).then(() => {
@@ -197,31 +200,31 @@ export class AutoDetectHashComponent implements OnInit {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     this.Ctx.fillStyle = '#00ff00';
-                    for (let y = 0, isObject = false, LastBlank = 0, SpaceLength,ItemHeight, length; y < this.Canvas.height; y++) {
+                    for (let y = 0, isObject = false, LastBlank = 0, SpaceLength, ItemHeight, length; y < this.Canvas.height; y++) {
                         if (!isObject && YBlank[y] > (10)) {
                             length = this.YBound.push([]);
                             isObject = true;
                             this.YBound[length - 1][0] = y;
                             SpaceLength = 0;
-                            ItemHeight=0;
+                            ItemHeight = 0;
                             this.Ctx.fillRect(0, y, this.Canvas.width, 1);
 
                         }
-                        if (isObject && ItemHeight>100 && YBlank[y] <= (this.YBound.length < 3 ? 10 : 30)) {
+                        if (isObject && ItemHeight > 100 && YBlank[y] <= (this.YBound.length < 3 ? 10 : 30)) {
                             SpaceLength++;
                             if (SpaceLength > 15) {
                                 SpaceLength = 0;
                                 this.YBound[length - 1][1] = LastBlank;
                                 isObject = false;
                                 this.Ctx.fillRect(0, LastBlank, this.Canvas.width, 1);
-                                //if (this.YBound.length === 3) { break; }
+                                // if (this.YBound.length === 3) { break; }
                             }
                         }
                         if (isObject && YBlank[y] > (this.YBound.length < 3 ? 5 : 20)) {
                             LastBlank = y;
                             SpaceLength = 0;
                         }
-                        if(isObject) {
+                        if (isObject) {
                             ItemHeight++;
                         }
                     }
@@ -238,10 +241,10 @@ export class AutoDetectHashComponent implements OnInit {
                             isObject = true;
                             this.XBound[length - 1][0] = x;
                             SpaceLength = 0;
-                            ItemWidth=0;
+                            ItemWidth = 0;
                             this.Ctx.fillRect(x, 0, 1, this.Canvas.height);
                         }
-                        if (isObject && ItemWidth>100 && XBlank[x] <= 10) {
+                        if (isObject && ItemWidth > 100 && XBlank[x] <= 10) {
                             SpaceLength++;
                             if (SpaceLength > 15) {
                                 SpaceLength = 0;
@@ -253,19 +256,19 @@ export class AutoDetectHashComponent implements OnInit {
                         }
                         if (isObject && XBlank[x] > 5) {
                             LastBlank = x;
-                            SpaceLength;
+                            SpaceLength = 0;
                         }
-                        if(isObject) {
+                        if (isObject) {
                             ItemWidth++;
                         }
                     }
-                    console.log(XBlank)
+                    // console.log(XBlank);
                     resolve();
                 }, 50);
             });
         });
     }
-    setProgress(text, Progress) {
+    setProgress(text: string, Progress: number) {
         this.InfoText = text;
         this.progress = Progress;
     }
