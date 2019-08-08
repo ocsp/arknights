@@ -27,18 +27,17 @@ export class AutoDetectHashComponent implements OnInit {
     ItemHash = [];
     ImageGreyData = {};
     NumberHash = {
-        1: '0000000011110100000011100100111100001110000011100000111100000000',
-        // 0000000011110100000011100100111100001110000011100000111100000000
-        2: '1001101001110011111000011111001100000110001110111101111110110000',
-        3: '0001000001110001000000011000011100110100111100010000110100010000',
-        4: '0000001100000011100110110011001101110011111100111011111111110000',
-        5: '0000001000000001011100000100111100000000110000010000111101100001',
-        6: '1001100000110001010000110111000101111000001100010000000000000000',
-        7: '0100110000000000001000111100011101001100100011000000000110010000',
-        8: '0000000000110011011100010000011111111001001100111111100000000000',
-        9: '0001011100001100011000011101110000110100011110010110001100000011',
-        0: '0001000101110001111010001110110011110000011100010000000000100000',
-        万: '0111000101110111000111111001111100011101001111010011100111100011'
+        1: '0000100000001000000010000000100000001000000010000000100000000001',
+        2: '0010011110000001000000010000000100000011000001000001100000100000',
+        3: '0010001100000001000000010000011000000011000000000000000100100011',
+        4: '0000001000001010000110100011001001000010000000110000001000000010',
+        5: '0010000101100000011000000011001100000000000000000000000101100011',
+        6: '0000001101100000010000001100011111100001110000000110000100110011',
+        7: '0000000000000001000000110000010000000100000010000000100000001000',
+        8: '0001001101100000011000000011101101100001110000000100000000010001',
+        9: '0010001111000001100000011100000000001101000000010000000101000111',
+        0: '0011001101100001110000011100000011000000110000010110000100110111',
+        万: '0000100000010000000100000001000100100001001000010110000111000001'
     };
     constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router, private el: ElementRef) {
     }
@@ -98,6 +97,8 @@ export class AutoDetectHashComponent implements OnInit {
             return this.checkHash();
         }).then(() => {
             return this.Ocr();
+        }).then(() => {
+            this.setProgress('识别完成，可点击图像对应位置进行图像修改', 1);
         });
     }
     Ocr() {
@@ -108,13 +109,13 @@ export class AutoDetectHashComponent implements OnInit {
                 // 惯例两for遍历
                 for (let y = 0, YAll = this.detectedItemList.length; y < YAll; y++) {
                     const YDistance = this.YBound[y][1] - this.YBound[y][0];
-                    const top = Math.floor(YDistance * 0.735);
+                    const top = Math.floor(YDistance * 0.735) + y;
                     const bottom = Math.floor(YDistance * 0.0725);
                     const height = YDistance - bottom - top;
                     const realTop = this.YBound[y][0] + top;
                     for (let x = 0, XAll = this.detectedItemList[y].length; x < XAll; x++) {
                         const XDistance = this.XBound[x][1] - this.XBound[x][0];
-                        const width = Math.floor(XDistance * 0.48);
+                        const width = Math.floor(XDistance * 0.485);
                         const realLeft = Math.floor(this.XBound[x][0] + (XDistance * 0.4));
                         // 1.裁剪出数字的地方
                         const NumberBuffer = document.createElement('canvas').getContext('2d');
@@ -130,21 +131,21 @@ export class AutoDetectHashComponent implements OnInit {
                             const BaseY = (ny * width) * 4;
                             for (let nx = 0; nx < width; nx++) {
                                 if (255 - Math.floor((ImgData[BaseY + nx * 4] + ImgData[BaseY + nx * 4 + 1] + ImgData[BaseY + nx * 4 + 2]) / 3) <= 80) {
-                                    /* ImgData[BaseY + nx * 4] = 255;
-                                     ImgData[BaseY + nx * 4 + 1] = 255;
-                                     ImgData[BaseY + nx * 4 + 2] = 255; */
+                                    ImgData[BaseY + nx * 4] = 255;
+                                    ImgData[BaseY + nx * 4 + 1] = 255;
+                                    ImgData[BaseY + nx * 4 + 2] = 255;
                                     easyData[ny][nx] = true;
                                 } else {
-                                    /* ImgData[BaseY + nx * 4] = 0;
-                                     ImgData[BaseY + nx * 4 + 1] = 0;
-                                     ImgData[BaseY + nx * 4 + 2] = 0; */
+                                    ImgData[BaseY + nx * 4] = 0;
+                                    ImgData[BaseY + nx * 4 + 1] = 0;
+                                    ImgData[BaseY + nx * 4 + 2] = 0;
                                     easyData[ny][nx] = false;
                                 }
                             }
                         }
-                        // this.Ctx.putImageData(rImgData, realLeft, realTop);
                         // 3. 分割每个数字，方便计算Hash
-                        const NumberBound = [];
+                        const XNumberBound = [];
+                        const YNumberBound = [];
                         this.Ctx.fillStyle = '#00ff00';
                         for (let nx = 0, whiteLock = false, i: number; nx < width; nx++) {
                             let white = 0;
@@ -152,52 +153,74 @@ export class AutoDetectHashComponent implements OnInit {
                                 if (easyData[ny][nx]) { white++; }
                             }
                             if (white && !whiteLock) {
-                                i = NumberBound.push([]) - 1;
-                                NumberBound[i][0] = nx;
+                                i = XNumberBound.push([]) - 1;
+                                XNumberBound[i][0] = nx;
                                 this.Ctx.fillRect(realLeft + nx, realTop, 1, height);
+
                                 whiteLock = true;
                             } else if (whiteLock && white === 0) {
-                                NumberBound[i][1] = nx;
+                                XNumberBound[i][1] = nx;
                                 this.Ctx.fillRect(realLeft + nx, realTop, 1, height);
                                 whiteLock = false;
                             }
                         }
+
+                        for (let index = 0, all = XNumberBound.length; index < all; index++) {
+                            for (let ny = 0, whiteLock = false; ny < height; ny++) {
+                                let white = 0;
+                                for (let nx = XNumberBound[index][0]; nx <= XNumberBound[index][1]; nx++) {
+                                    if (easyData[ny][nx]) { white++; }
+                                }
+                                if (white && !whiteLock) {
+                                    YNumberBound[index] = [];
+                                    YNumberBound[index][0] = ny;
+                                    this.Ctx.fillRect(realLeft + XNumberBound[index][0], realTop + ny, XNumberBound[index][1] - XNumberBound[index][0], 1);
+                                    whiteLock = true;
+                                } else if (whiteLock && white === 0) {
+                                    YNumberBound[index][1] = ny;
+                                    this.Ctx.fillRect(realLeft + XNumberBound[index][0], realTop + ny, XNumberBound[index][1] - XNumberBound[index][0], 1);
+                                    whiteLock = false;
+                                }
+                            }
+                        }
                         this.Ctx.fillStyle = '#ff0000';
                         let NumberString = '';
-                        for (let i = 0, all = NumberBound.length; i < all; i++) {
-                            if (NumberBound[i].length !== 2) { continue; }
-                            if (NumberBound[i][1] - NumberBound[i][0] >= 1 && NumberBound[i][1] - NumberBound[i][0] <= 3) {
+                        NumberBuffer.putImageData(rImgData, 0, 0);
+                        for (let i = 0, all = XNumberBound.length; i < all; i++) {
+                            if (XNumberBound[i].length !== 2) { continue; }
+                            if (XNumberBound[i][1] - XNumberBound[i][0] >= 1 && XNumberBound[i][1] - XNumberBound[i][0] <= 3) {
                                 NumberString = NumberString.replace(/\./g, '') + '.';
+                                continue;
                             }
-                            if (NumberBound[i][1] - NumberBound[i][0] < 6 || NumberBound[i][1] - NumberBound[i][0] >= 24) { continue; }
-                            this.Ctx.fillRect(realLeft + NumberBound[i][0], realTop, 1, height);
-                            this.Ctx.fillRect(realLeft + NumberBound[i][1], realTop, 1, height);
+                            if (XNumberBound[i][1] - XNumberBound[i][0] < 6 || XNumberBound[i][1] - XNumberBound[i][0] >= 24) { continue; }
+                            this.Ctx.fillRect(realLeft + XNumberBound[i][0], realTop, 1, height);
+                            this.Ctx.fillRect(realLeft + XNumberBound[i][1], realTop, 1, height);
                             let hash = '';
                             const SingleNumber = document.createElement('canvas').getContext('2d');
                             SingleNumber.canvas.width = 9;
                             SingleNumber.canvas.height = 8;
-                            SingleNumber.drawImage(this.ImageElement, realLeft + NumberBound[i][0], realTop, NumberBound[i][1] - NumberBound[i][0], height, 0, 0, 9, 8);
+                            // 数值范围显示:this.Ctx.fillRect(realLeft + XNumberBound[i][0], realTop+YNumberBound[i][0], XNumberBound[i][1] - XNumberBound[i][0], YNumberBound[i][1] - YNumberBound[i][0]);
+                            SingleNumber.drawImage(NumberBuffer.canvas, XNumberBound[i][0], YNumberBound[i][0], XNumberBound[i][1] - XNumberBound[i][0], YNumberBound[i][1] - YNumberBound[i][0], 0, 0, 9, 8);
                             const SingleNumberData = SingleNumber.getImageData(0, 0, SingleNumber.canvas.width, SingleNumber.canvas.height).data;
                             for (let j = 0, dataAll = SingleNumberData.length; j < dataAll; j += 4) {
                                 if (Math.floor(j / 4) % 9 === 8) { continue; }
                                 hash += (Math.floor((SingleNumberData[j] + SingleNumberData[j + 1] + SingleNumberData[j + 2]) / 3) > Math.floor((SingleNumberData[j + 4] + SingleNumberData[j + 5] + SingleNumberData[j + 6]) / 3)) ? '1' : '0';
                             }
-                            console.log(hash, y, x, i);
-                            let min = Infinity;
+                            let Q = Infinity;
                             let Value = '';
                             for (const key of Object.keys(this.NumberHash)) {
                                 const distance = this.NumberHash[key].split('').reduce((count, value, index) => {
                                     return count + (value === hash[index] ? 0 : 1);
                                 }, 0);
-                                const LD = this.LD(hash, this.NumberHash[key]);
+                                /*const LD = this.LD(hash, this.NumberHash[key]);
                                 const LCS = this.LCS(hash, this.NumberHash[key]);
-                                const S = (1 - (LCS / (LD + LCS))) * 100;
-                                min = Math.min(min, distance * S);
-                                if (min === distance * S) {
+                                const S = (1 - (LCS / (LD + LCS))) * 100;*/
+                                Q = Math.min(Q, distance);
+                                if (Q === distance) {
                                     Value = key;
                                 }
                             }
-                            NumberString += min > 3000 ? '' : Value;
+                            NumberString += Q > 15 ? '' : Value; // 去噪声
                         }
                         if (NumberString.indexOf('.') === -1 || /万\d+/.test(NumberString)) {
                             NumberString = NumberString.replace(/万/g, '');
@@ -215,7 +238,7 @@ export class AutoDetectHashComponent implements OnInit {
                         /* 直接对比汉明距离在这里不太好用，使用编辑距离来进行比较
                         // 实际测试中发现对不同设备的兼容性不够良好
                         for (let ny = 0; ny < height; ny++) {
-                            for (let nx = NumberBound[i][0]; nx <= NumberBound[i][1]; nx++) {
+                            for (let nx = XNumberBound[i][0]; nx <= XNumberBound[i][1]; nx++) {
                                 hash += easyData[ny][nx] ? '1' : '0';
                             }
                         }
@@ -242,7 +265,7 @@ export class AutoDetectHashComponent implements OnInit {
                     }
                     */
                         // console.log(easyData);
-                        // console.log(NumberBound);
+                        // console.log(XNumberBound);
                     }
                 }
                 resolve();
