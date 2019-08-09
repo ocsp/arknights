@@ -624,7 +624,7 @@ export class AutoDetectHashComponent implements OnInit {
         }
         for (let y = 0, Yall = this.detectedItemList.length; y < Yall; y++) {
             for (let x = 0, Xall = this.detectedItemList[y].length; x < Xall; x++) {
-                if (this.detectedItemList[y][x].name in data && !isNaN(this.detectedItemList[y][x].have)) {
+                if (this.detectedItemList[y][x].name in data && !isNaN(this.detectedItemList[y][x].have) && this.detectedItemList[y][x].have !== 0) {
                     data[this.detectedItemList[y][x].name].have = this.detectedItemList[y][x].have;
                 }
             }
