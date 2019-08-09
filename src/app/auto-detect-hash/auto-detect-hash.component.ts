@@ -26,6 +26,11 @@ export class AutoDetectHashComponent implements OnInit {
     ItemGreyData = [];
     ItemHash = [];
     ImageGreyData = {};
+    ButtonLock = false;
+    ItemImage = '';
+    ModifyingItem = null;
+    ModifyBuffer = { name: '', have: 0 };
+    Modifying = { x: 0, y: 0 };
     NumberHash = {
         1: '0000100000001000000010000000100000001000000010000000100000000001',
         2: '0010011110000001000000010000000100000011000001000001100000100000',
@@ -43,9 +48,20 @@ export class AutoDetectHashComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.fetchService.getJson('./assets/data/MaterialHash.json').subscribe(data => {
-            this.ItemHashList = data;
-        });
+
+        const SaveHash = this.fetchService.getLocalStorage('detect-hash', false);
+        if (SaveHash === false) {
+            this.fetchService.getJson('./assets/data/MaterialHash.json').subscribe(data => {
+                this.ItemHashList = data;
+                this.fetchService.setLocalStorage('detect-hash', {
+                    NumberHash: this.NumberHash,
+                    ItemHash: data
+                });
+            });
+        } else {
+            this.ItemHashList = SaveHash.ItemHash;
+            this.NumberHash = SaveHash.NumberHash;
+        }
         this.ImageElement = document.createElement('img');
         this.Canvas = this.el.nativeElement.getElementsByTagName('canvas')[0];
         this.Ctx = this.Canvas.getContext('2d');
@@ -77,7 +93,7 @@ export class AutoDetectHashComponent implements OnInit {
             this.Canvas.style.height = height + 'px';*/
             this.ImageLoaded = true;
             this.Ctx.drawImage(img, 0, 0);
-            this.Ctx.font = '25px serif';
+            this.Ctx.font = img.height / 1200 * 20 + 'px serif';
             this.Ctx.textAlign = 'center';
             this.ImageData = this.Ctx.getImageData(0, 0, this.Canvas.width, this.Canvas.height);
         };
@@ -89,6 +105,7 @@ export class AutoDetectHashComponent implements OnInit {
         this.detectedItemList = [];
         this.ItemHash = [];
         this.setProgress('正在扫描图片', 0.1);
+        this.ButtonLock = true;
         this.searchBoundary().then(() => {
             return this.CropImage();
         }).then(() => {
@@ -98,7 +115,8 @@ export class AutoDetectHashComponent implements OnInit {
         }).then(() => {
             return this.Ocr();
         }).then(() => {
-            this.setProgress('识别完成，可点击图像对应位置进行图像修改', 1);
+            this.setProgress('识别完成，可点击图像对应位置对识别结果进行修改', 1);
+            this.ButtonLock = false;
         });
     }
     Ocr() {
@@ -229,7 +247,7 @@ export class AutoDetectHashComponent implements OnInit {
                             NumberString = NumberString.substr(1, NumberString.length - 1);
                         }
                         this.Ctx.fillStyle = '#00ff00';
-                        this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + 20));
+                        this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 1200 * 20));
                         if (NumberString.substr(NumberString.length - 1, 1) === '万') {
                             this.detectedItemList[y][x].have = Number(NumberString.substr(0, NumberString.length - 1)) * 10000;
                         } else {
@@ -272,6 +290,7 @@ export class AutoDetectHashComponent implements OnInit {
             }, 25);
         });
     }
+    /*
     LD(str1: string, str2: string) {
         // 实现LD算法计算编辑距离 可以优化成LDCompare(https://www.cnblogs.com/grenet/archive/2009/12/17/1626649.html#comment_body_1727150)?
         // 代码参考https://www.cnblogs.com/grenet/archive/2010/06/01/1748448.html
@@ -317,7 +336,7 @@ export class AutoDetectHashComponent implements OnInit {
             }
         }
         return L[str1.length][str2.length];
-    }
+    }*/
     CropImage() {
         // 裁剪图片
         return new Promise((resolve, reject) => {
@@ -390,6 +409,7 @@ export class AutoDetectHashComponent implements OnInit {
                                 };
                             }).sort((a, b) => a.distance - b.distance)
                         };
+                        this.detectedItemList[y][x].name = this.detectedItemList[y][x].item[0].name;
                         this.Ctx.fillText(this.detectedItemList[y][x].item[0].name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
                     }
                 }
@@ -521,6 +541,96 @@ export class AutoDetectHashComponent implements OnInit {
     setProgress(text: string, Progress: number) {
         this.InfoText = text;
         this.progress = Progress;
+    }
+    ModifyData(dialog: any, e: MouseEvent) {
+        if (this.detectedItemList.length === 0) { return; }
+        const rect = this.Canvas.getBoundingClientRect();
+        const clickY = e.offsetY * (this.Canvas.height / rect.height);
+        const clickX = e.offsetX * (this.Canvas.width / rect.width);
+        let x: number;
+        let y: number;
+        for (let ya = 0, YAll = this.YBound.length; ya < YAll; ya++) {
+            if (this.YBound[ya].length !== 2) { continue; }
+            if (clickY >= this.YBound[ya][0] && clickY <= this.YBound[ya][1]) {
+                y = ya;
+                break;
+            }
+        }
+        for (let xa = 0, XAll = this.XBound.length; xa < XAll; xa++) {
+            if (this.XBound[xa].length !== 2) { continue; }
+            if (clickX >= this.XBound[xa][0] && clickX <= this.XBound[xa][1]) {
+                x = xa;
+                break;
+            }
+        }
+        if (typeof x === 'undefined' || typeof y === 'undefined') { return; }
+        const ItemImage = document.createElement('canvas').getContext('2d');
+        ItemImage.canvas.width = this.XBound[x][1] - this.XBound[x][0];
+        ItemImage.canvas.height = this.YBound[y][1] - this.YBound[y][0];
+        ItemImage.drawImage(this.ImageElement, this.XBound[x][0], this.YBound[y][0], this.XBound[x][1] - this.XBound[x][0], this.YBound[y][1] - this.YBound[y][0], 0, 0, ItemImage.canvas.width, ItemImage.canvas.height);
+        this.ItemImage = ItemImage.canvas.toDataURL();
+        this.ModifyingItem = this.detectedItemList[y][x];
+        this.ModifyBuffer.have = this.ModifyingItem.have;
+        this.ModifyBuffer.name = this.ModifyingItem.name;
+        this.Modifying.y = y;
+        this.Modifying.x = x;
+        dialog.open();
+    }
+    AcceptModify() {
+        const y = this.Modifying.y;
+        const x = this.Modifying.x;
+        if (this.ModifyBuffer.name !== this.ModifyingItem.name) {
+            for (let i = 0, all = this.ItemHashList.length; i < all; i++) {
+                if (this.ItemHashList[i].name === this.ModifyingItem.name) {
+                    this.ItemHashList[i].hash = this.ItemHash[y][x];
+                    break;
+                }
+            }
+            this.fetchService.setLocalStorage('detect-hash', {
+                NumberHash: this.NumberHash,
+                ItemHash: this.ItemHashList
+            });
+        }
+        if (this.ModifyBuffer.name !== this.ModifyingItem.name || this.ModifyBuffer.have !== this.ModifyingItem.have) {
+            for (const key of Object.keys(this.ModifyBuffer)) {
+                this.ModifyingItem[key] = this.ModifyBuffer[key];
+            }
+            this.Ctx.drawImage(this.ImageElement, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1);
+            this.Ctx.fillStyle = '#00ff00';
+            this.Ctx.fillText(this.ModifyingItem.name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
+            const NumberString = (this.ModifyingItem.have / 10000 >= 1) ? Math.round(this.ModifyingItem.have / 100) / 100 : this.ModifyingItem.have;
+            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 1200 * 20));
+        }
+    }
+    async toMaterialCalc() {
+        if (!this.detectedItemList || this.detectedItemList.length === 0) {
+            this.snackbar.show({
+                message: '材料为空，请先输入需求。',
+                actionText: '好的',
+                multiline: false,
+                actionOnBottom: false
+            });
+            return;
+        }
+        const data = this.fetchService.getLocalStorage('m-data', {});
+        if (Object.keys(data).length === 0) {
+            this.snackbar.show({
+                message: '请先打开一次材料计算页面。',
+                actionText: '好的',
+                multiline: false,
+                actionOnBottom: false
+            });
+            return;
+        }
+        for (let y = 0, Yall = this.detectedItemList.length; y < Yall; y++) {
+            for (let x = 0, Xall = this.detectedItemList[y].length; x < Xall; x++) {
+                if (this.detectedItemList[y][x].name in data && !isNaN(this.detectedItemList[y][x].have)) {
+                    data[this.detectedItemList[y][x].name].have = this.detectedItemList[y][x].have;
+                }
+            }
+        }
+        this.fetchService.setLocalStorage('m-data', data);
+        this.router.navigateByUrl('/material');
     }
 }
 

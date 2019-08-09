@@ -6,7 +6,7 @@
     </button>
     <input #fileInput type="file" id="test-image-file" name="test" accept="image/gif, image/jpeg, image/png, image/jpg"
       (change)="choiceImage($event)" style="display:none;">
-    <button mdcButton raised dense [disabled]="!ImageLoaded" (click)="objectRegonition()">开始识别</button><br>
+    <button mdcButton raised dense [disabled]="!ImageLoaded||ButtonLock" (click)="objectRegonition()">开始识别</button><br>
   </div>
   <div mdcCard fxLayout="row wrap">
     <div mdcCardActions fullBleed fxFlex="100">
@@ -19,5 +19,51 @@
     <p style="text-align:center;margin:5px auto;">{{InfoText}}</p>
   </div>
   <div mdcLinearProgress [progressValue]="progress" bufferValue="1"></div>
-  <canvas style="margin:0 auto;">浏览器不支持Canvas 建议您换用最新版的Chrome/Firefox浏览器</canvas>
+  <canvas style="margin:0 auto;" (click)="ModifyData(dialog,$event)">浏览器不支持Canvas 建议您换用最新版的Chrome/Firefox浏览器</canvas>
+  <aside #dialog="mdcDialog" mdcDialog mdcFocusTrap>
+    <div mdcDialogSurface>
+      <header mdcDialogHeader>
+        <h2 mdcDialogHeaderTitle>修改数据</h2>
+      </header>
+      <section mdcDialogBody>
+        <div id="headImage" style="text-align: center;">
+          <img [src]="ItemImage||''" style="margin: 0 auto;" width="100" />
+        </div>
+        <div id="DataChange" style="text-align: center;">
+          <ng-container *ngIf="ModifyingItem!==null">
+            <div mdcSelect style="width:80%;">
+              <select mdcSelectControl [(ngModel)]="ModifyBuffer.name">
+                <option *ngFor="let item of ModifyingItem.item; let i=index" [value]="item.name" [selected]="i === 0">
+                  {{item.name}}</option>
+              </select>
+              <label mdcFloatingLabel></label>
+            </div>
+          </ng-container>
+          <ng-container>
+              <div mdcTextField dense class="input-field" style="width:80%;">
+                  <span>
+                    <button mdcButton dense>
+                      <i mdcButtonIcon class="material-icons" (click)="ModifyBuffer.have=ModifyBuffer.have-(ModifyBuffer.have>0?1:0)">remove</i>
+                    </button>
+                  </span>
+                  <span style="width:100%;">
+                    <input mdcTextFieldInput type="number" [(ngModel)]="ModifyBuffer.have">
+                    <label mdcFloatingLabel class="mdc-floating-label--float-above">识别结果</label>
+                  </span>
+                  <span>
+                    <button mdcButton dense>
+                      <i mdcButtonIcon class="material-icons" (click)="ModifyBuffer.have=ModifyBuffer.have+1">add</i>
+                    </button>
+                  </span>
+                </div>
+          </ng-container>
+        </div>
+      </section>
+      <footer mdcDialogFooter>
+        <button mdcButton mdcDialogCancel>取消</button>
+        <button mdcButton mdcDialogAccept (click)="AcceptModify()">确定</button>
+      </footer>
+    </div>
+    <div mdcDialogBackdrop></div>
+  </aside>
 </div>
