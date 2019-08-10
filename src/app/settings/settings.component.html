@@ -35,6 +35,7 @@
           <label mdcFormFieldLabel>感知哈希图像识别:最大字体模式</label>
         </div>
       </li>
+      <li mdcListDivider></li>
       <li mdcListItem>
         <div mdcFormField>
           <div mdcSwitch>
@@ -46,10 +47,10 @@
       <li mdcListItem>
         <div mdcFormField>
           <div mdcTextField class="input-field" style="width:80%;">
-            <input mdcTextFieldInput [(ngModel)]="detectColor" (change)="saveSettings()">
+            <input mdcTextFieldInput [(ngModel)]="detectColor" (change)="saveSettings()" />
             <label mdcFloatingLabel class="mdc-floating-label--float-above">颜色代码</label>
           </div>
-          <label mdcFormFieldLabel>感知哈希图像识别:显示在图像上的颜色<label>
+          <label mdcFormFieldLabel>感知哈希图像识别:显示在图像上的颜色</label>
         </div>
       </li>
       <li mdcListDivider></li>
