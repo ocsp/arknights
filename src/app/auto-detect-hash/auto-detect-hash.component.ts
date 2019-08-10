@@ -29,8 +29,11 @@ export class AutoDetectHashComponent implements OnInit {
     ButtonLock = false;
     ItemImage = '';
     ModifyingItem = null;
-    ModifyBuffer = { name: '', have: 0 };
+    ModifyBuffer = { name: '', have: 0, delete: false};
     Modifying = { x: 0, y: 0 };
+    NumberData = [];
+    FixingNumberData = [];
+    FixingNumberIndex = 0;
     NumberHash = {
         1: '0000100000001000000010000000100000001000000010000000100000000001',
         2: '0010011110000001000000010000000100000011000001000001100000100000',
@@ -93,7 +96,7 @@ export class AutoDetectHashComponent implements OnInit {
             this.Canvas.style.height = height + 'px';*/
             this.ImageLoaded = true;
             this.Ctx.drawImage(img, 0, 0);
-            this.Ctx.font = img.height / 1200 * 20 + 'px serif';
+            this.Ctx.font = img.height / 750 * 15 + 'px serif';
             this.Ctx.textAlign = 'center';
             this.ImageData = this.Ctx.getImageData(0, 0, this.Canvas.width, this.Canvas.height);
         };
@@ -126,12 +129,14 @@ export class AutoDetectHashComponent implements OnInit {
             setTimeout(() => {
                 // 惯例两for遍历
                 for (let y = 0, YAll = this.detectedItemList.length; y < YAll; y++) {
+                    this.NumberData.push([]);
                     const YDistance = this.YBound[y][1] - this.YBound[y][0];
                     const top = Math.floor(YDistance * 0.735) + y;
                     const bottom = Math.floor(YDistance * 0.0725);
                     const height = YDistance - bottom - top;
                     const realTop = this.YBound[y][0] + top;
                     for (let x = 0, XAll = this.detectedItemList[y].length; x < XAll; x++) {
+                        this.NumberData[y].push([]);
                         const XDistance = this.XBound[x][1] - this.XBound[x][0];
                         const width = Math.floor(XDistance * 0.485);
                         const realLeft = Math.floor(this.XBound[x][0] + (XDistance * 0.4));
@@ -239,6 +244,15 @@ export class AutoDetectHashComponent implements OnInit {
                                 }
                             }
                             NumberString += Q > 15 ? '' : Value; // 去噪声
+                            if (Q <= 15) {
+                                const TempCanvas = document.createElement('canvas').getContext('2d');
+                                TempCanvas.canvas.width = XNumberBound[i][1] - XNumberBound[i][0];
+                                TempCanvas.canvas.height = YNumberBound[i][1] - YNumberBound[i][0];
+                                TempCanvas.drawImage(this.ImageElement, realLeft + XNumberBound[i][0], realTop + YNumberBound[i][0], TempCanvas.canvas.width, TempCanvas.canvas.height, 0, 0, TempCanvas.canvas.width, TempCanvas.canvas.height);
+                                this.NumberData[y][x].push({ hash, src: TempCanvas.canvas.toDataURL(), realData:null});
+                                TempCanvas.canvas.remove();
+                            }
+                            SingleNumber.canvas.remove();
                         }
                         if (NumberString.indexOf('.') === -1 || /万\d+/.test(NumberString)) {
                             NumberString = NumberString.replace(/万/g, '');
@@ -247,12 +261,13 @@ export class AutoDetectHashComponent implements OnInit {
                             NumberString = NumberString.substr(1, NumberString.length - 1);
                         }
                         this.Ctx.fillStyle = '#00ff00';
-                        this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 1200 * 20));
+                        this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 750 * 15));
                         if (NumberString.substr(NumberString.length - 1, 1) === '万') {
                             this.detectedItemList[y][x].have = Number(NumberString.substr(0, NumberString.length - 1)) * 10000;
                         } else {
                             this.detectedItemList[y][x].have = Number(NumberString);
                         }
+                        NumberBuffer.canvas.remove();
                         /* 直接对比汉明距离在这里不太好用，使用编辑距离来进行比较
                         // 实际测试中发现对不同设备的兼容性不够良好
                         for (let ny = 0; ny < height; ny++) {
@@ -410,6 +425,7 @@ export class AutoDetectHashComponent implements OnInit {
                             }).sort((a, b) => a.distance - b.distance)
                         };
                         this.detectedItemList[y][x].name = this.detectedItemList[y][x].item[0].name;
+                        this.detectedItemList[y][x].delete = false;
                         this.Ctx.fillText(this.detectedItemList[y][x].item[0].name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
                     }
                 }
@@ -570,10 +586,14 @@ export class AutoDetectHashComponent implements OnInit {
         ItemImage.drawImage(this.ImageElement, this.XBound[x][0], this.YBound[y][0], this.XBound[x][1] - this.XBound[x][0], this.YBound[y][1] - this.YBound[y][0], 0, 0, ItemImage.canvas.width, ItemImage.canvas.height);
         this.ItemImage = ItemImage.canvas.toDataURL();
         this.ModifyingItem = this.detectedItemList[y][x];
-        this.ModifyBuffer.have = this.ModifyingItem.have;
-        this.ModifyBuffer.name = this.ModifyingItem.name;
+        for (const key of Object.keys(this.ModifyingItem)) {
+            if (typeof this.ModifyingItem[key] !== 'object') {
+                this.ModifyBuffer[key] = this.ModifyingItem[key];
+            }
+        }
         this.Modifying.y = y;
         this.Modifying.x = x;
+        // console.dir(dialog);
         dialog.open();
     }
     AcceptModify() {
@@ -581,7 +601,7 @@ export class AutoDetectHashComponent implements OnInit {
         const x = this.Modifying.x;
         if (this.ModifyBuffer.name !== this.ModifyingItem.name) {
             for (let i = 0, all = this.ItemHashList.length; i < all; i++) {
-                if (this.ItemHashList[i].name === this.ModifyingItem.name) {
+                if (this.ItemHashList[i].name === this.ModifyBuffer.name) {
                     this.ItemHashList[i].hash = this.ItemHash[y][x];
                     break;
                 }
@@ -591,7 +611,7 @@ export class AutoDetectHashComponent implements OnInit {
                 ItemHash: this.ItemHashList
             });
         }
-        if (this.ModifyBuffer.name !== this.ModifyingItem.name || this.ModifyBuffer.have !== this.ModifyingItem.have) {
+        if (this.ModifyBuffer.name !== this.ModifyingItem.name || this.ModifyBuffer.have !== this.ModifyingItem.have || this.ModifyBuffer.delete !== this.ModifyingItem.delete) {
             for (const key of Object.keys(this.ModifyBuffer)) {
                 this.ModifyingItem[key] = this.ModifyBuffer[key];
             }
@@ -599,7 +619,11 @@ export class AutoDetectHashComponent implements OnInit {
             this.Ctx.fillStyle = '#00ff00';
             this.Ctx.fillText(this.ModifyingItem.name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
             const NumberString = (this.ModifyingItem.have / 10000 >= 1) ? Math.round(this.ModifyingItem.have / 100) / 100 : this.ModifyingItem.have;
-            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 1200 * 20));
+            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 750 * 15));
+        }
+        if (this.ModifyingItem.delete) {
+            this.Ctx.drawImage(this.ImageElement, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1);
+            return;
         }
     }
     async toMaterialCalc() {
@@ -624,13 +648,32 @@ export class AutoDetectHashComponent implements OnInit {
         }
         for (let y = 0, Yall = this.detectedItemList.length; y < Yall; y++) {
             for (let x = 0, Xall = this.detectedItemList[y].length; x < Xall; x++) {
-                if (this.detectedItemList[y][x].name in data && !isNaN(this.detectedItemList[y][x].have) && this.detectedItemList[y][x].have !== 0) {
+                if (this.detectedItemList[y][x].name in data && !isNaN(this.detectedItemList[y][x].have) && this.detectedItemList[y][x].have !== 0 && !this.detectedItemList[y][x].delete) {
                     data[this.detectedItemList[y][x].name].have = this.detectedItemList[y][x].have;
                 }
             }
         }
         this.fetchService.setLocalStorage('m-data', data);
         this.router.navigateByUrl('/material');
+    }
+    toggleItem() {
+        this.ModifyBuffer.delete = !this.ModifyBuffer.delete;
+    }
+    fixNumberHash(dialog: any) {
+        this.FixingNumberData = this.NumberData[this.Modifying.y][this.Modifying.x];
+        this.FixingNumberIndex = 0;
+        dialog.open();
+    }
+    AcceptFixNumber() {
+        for (let i=0,all=this.FixingNumberData.length;i<all;i++) {
+            if(this.FixingNumberData[i].realData !== null) {
+                this.NumberHash[this.FixingNumberData[i].realData]=this.FixingNumberData[i].hash;
+            }
+        }
+        this.fetchService.setLocalStorage('detect-hash', {
+            NumberHash: this.NumberHash,
+            ItemHash: this.ItemHashList
+        });
     }
 }
 
