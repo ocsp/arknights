@@ -79,7 +79,7 @@
             <img *ngFor="let item of FixingNumberData; let i=index" [src]="item.src" style="margin: 0 5px;" height="30" width="20" (click)="FixingNumberIndex=i" [class.select]="i==FixingNumberIndex"/>
           </div>
           <div id="DataChange" style="text-align: center;">
-              <div *ngIf="FixingNumberData[FixingNumberIndex]" mdcTextField dense class="input-field" style="width:80%;">
+              <div *ngIf="FixingNumberData[FixingNumberIndex]" mdcTextField class="input-field" style="width:80%;">
                   <input mdcTextFieldInput [(ngModel)]="FixingNumberData[FixingNumberIndex].realData">
                   <label mdcFloatingLabel class="mdc-floating-label--float-above">在此输入你选择的那个数字(或万)</label>
               </div>

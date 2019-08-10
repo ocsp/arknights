@@ -19,17 +19,20 @@ export class SettingsComponent implements OnInit {
   };
   isExtraSmall = false;
   isMaxFontSize = true;
+  detectColor = '#00ff00';
   constructor(private fetch: FetchService, private router: Router, private snackbar: MdcSnackbarService) {
   }
 
   ngOnInit() {
     this.isExtraSmall = this.fetch.getLocalStorage("s-exsm", false);
     this.isMaxFontSize = this.fetch.getLocalStorage("detect-mfs", true);
+    this.detectColor = this.fetch.getLocalStorage("detect-tclr", '#00ff00');
   }
 
   saveSettings() {
     this.fetch.setLocalStorage("s-exsm", this.isExtraSmall);
     this.fetch.setLocalStorage("detect-mfs", this.isMaxFontSize);
+    this.fetch.setLocalStorage("detect-tclr", this.detectColor);
     console.log(localStorage);
   }
 

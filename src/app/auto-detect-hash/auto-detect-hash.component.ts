@@ -34,6 +34,7 @@ export class AutoDetectHashComponent implements OnInit {
     NumberData = [];
     FixingNumberData = [];
     FixingNumberIndex = 0;
+    textColor = '#00ff00';
     NumberHash = {
         1: '0000100000001000000010000000100000001000000010000000100000000001',
         2: '0010011110000001000000010000000100000011000001000001100000100000',
@@ -68,6 +69,7 @@ export class AutoDetectHashComponent implements OnInit {
             this.NumberHash = SaveHash.NumberHash;
         }
         this.MaxFontSize = this.fetchService.getLocalStorage('detect-mfs', true);
+        this.textColor = this.fetchService.getLocalStorage('detect-tclr', '#00ff00');
         this.ImageElement = document.createElement('img');
         this.Canvas = this.el.nativeElement.getElementsByTagName('canvas')[0];
         this.Ctx = this.Canvas.getContext('2d');
@@ -677,7 +679,7 @@ export class AutoDetectHashComponent implements OnInit {
         });
     }
     drawText(...pos: number[]) {
-        this.Ctx.fillStyle = '#5c638a';
+        this.Ctx.fillStyle = this.textColor;
         if (pos.length === 0) {
             this.setProgress('正在绘制文字', 0.95);
             return new Promise((reduce, reject) => {
