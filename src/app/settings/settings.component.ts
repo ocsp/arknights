@@ -18,15 +18,18 @@ export class SettingsComponent implements OnInit {
     declineCallback: () => { }
   };
   isExtraSmall = false;
+  isMaxFontSize = true;
   constructor(private fetch: FetchService, private router: Router, private snackbar: MdcSnackbarService) {
   }
 
   ngOnInit() {
     this.isExtraSmall = this.fetch.getLocalStorage("s-exsm", false);
+    this.isMaxFontSize = this.fetch.getLocalStorage("detect-mfs", true);
   }
 
   saveSettings() {
     this.fetch.setLocalStorage("s-exsm", this.isExtraSmall);
+    this.fetch.setLocalStorage("detect-mfs", this.isMaxFontSize);
     console.log(localStorage);
   }
 

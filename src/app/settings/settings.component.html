@@ -26,6 +26,14 @@
           <label mdcFormFieldLabel>超小屏幕模式</label>
         </div>
       </li>
+      <li mdcListItem>
+        <div mdcFormField>
+          <div mdcSwitch>
+            <input mdcSwitchInput type="checkbox" [(ngModel)]="isMaxFontSize" (change)="saveSettings()"/>
+          </div>
+          <label mdcFormFieldLabel>感知哈希图像识别:最大字体模式</label>
+        </div>
+      </li>
       <li mdcListDivider></li>
       <li mdcListItem (click)="beforeClear();dialog1.open()">
         <i mdcListItemGraphic class="material-icons">delete</i>清空本地数据

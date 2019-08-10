@@ -29,7 +29,7 @@ export class AutoDetectHashComponent implements OnInit {
     ButtonLock = false;
     ItemImage = '';
     ModifyingItem = null;
-    ModifyBuffer = { name: '', have: 0, delete: false};
+    ModifyBuffer = { name: '', have: 0, delete: false };
     Modifying = { x: 0, y: 0 };
     NumberData = [];
     FixingNumberData = [];
@@ -47,6 +47,8 @@ export class AutoDetectHashComponent implements OnInit {
         0: '0011001101100001110000011100000011000000110000010110000100110111',
         万: '0000100000010000000100000001000100100001001000010110000111000001'
     };
+    MaxFontSize = true;
+    FontSize = 0 ;
     constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router, private el: ElementRef) {
     }
 
@@ -65,6 +67,7 @@ export class AutoDetectHashComponent implements OnInit {
             this.ItemHashList = SaveHash.ItemHash;
             this.NumberHash = SaveHash.NumberHash;
         }
+        this.MaxFontSize = this.fetchService.getLocalStorage('detect-mfs', true);
         this.ImageElement = document.createElement('img');
         this.Canvas = this.el.nativeElement.getElementsByTagName('canvas')[0];
         this.Ctx = this.Canvas.getContext('2d');
@@ -96,7 +99,7 @@ export class AutoDetectHashComponent implements OnInit {
             this.Canvas.style.height = height + 'px';*/
             this.ImageLoaded = true;
             this.Ctx.drawImage(img, 0, 0);
-            this.Ctx.font = img.height / 750 * 15 + 'px serif';
+            // this.Ctx.font = img.height / 750 * 15 + 'px serif';
             this.Ctx.textAlign = 'center';
             this.ImageData = this.Ctx.getImageData(0, 0, this.Canvas.width, this.Canvas.height);
         };
@@ -117,6 +120,8 @@ export class AutoDetectHashComponent implements OnInit {
             return this.checkHash();
         }).then(() => {
             return this.Ocr();
+        }).then(() => {
+            return this.drawText();
         }).then(() => {
             this.setProgress('识别完成，可点击图像对应位置对识别结果进行修改', 1);
             this.ButtonLock = false;
@@ -249,7 +254,7 @@ export class AutoDetectHashComponent implements OnInit {
                                 TempCanvas.canvas.width = XNumberBound[i][1] - XNumberBound[i][0];
                                 TempCanvas.canvas.height = YNumberBound[i][1] - YNumberBound[i][0];
                                 TempCanvas.drawImage(this.ImageElement, realLeft + XNumberBound[i][0], realTop + YNumberBound[i][0], TempCanvas.canvas.width, TempCanvas.canvas.height, 0, 0, TempCanvas.canvas.width, TempCanvas.canvas.height);
-                                this.NumberData[y][x].push({ hash, src: TempCanvas.canvas.toDataURL(), realData:null});
+                                this.NumberData[y][x].push({ hash, src: TempCanvas.canvas.toDataURL(), realData: null });
                                 TempCanvas.canvas.remove();
                             }
                             SingleNumber.canvas.remove();
@@ -260,8 +265,7 @@ export class AutoDetectHashComponent implements OnInit {
                         if (NumberString[0] === '.') {
                             NumberString = NumberString.substr(1, NumberString.length - 1);
                         }
-                        this.Ctx.fillStyle = '#00ff00';
-                        this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 750 * 15));
+                        // this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 750 * 15));
                         if (NumberString.substr(NumberString.length - 1, 1) === '万') {
                             this.detectedItemList[y][x].have = Number(NumberString.substr(0, NumberString.length - 1)) * 10000;
                         } else {
@@ -426,7 +430,7 @@ export class AutoDetectHashComponent implements OnInit {
                         };
                         this.detectedItemList[y][x].name = this.detectedItemList[y][x].item[0].name;
                         this.detectedItemList[y][x].delete = false;
-                        this.Ctx.fillText(this.detectedItemList[y][x].item[0].name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
+                        // this.Ctx.fillText(this.detectedItemList[y][x].item[0].name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
                     }
                 }
                 resolve();
@@ -616,10 +620,7 @@ export class AutoDetectHashComponent implements OnInit {
                 this.ModifyingItem[key] = this.ModifyBuffer[key];
             }
             this.Ctx.drawImage(this.ImageElement, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1);
-            this.Ctx.fillStyle = '#00ff00';
-            this.Ctx.fillText(this.ModifyingItem.name, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2));
-            const NumberString = (this.ModifyingItem.have / 10000 >= 1) ? Math.round(this.ModifyingItem.have / 100) / 100 : this.ModifyingItem.have;
-            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (this.XBound[x][1] - this.XBound[x][0]) / 2), Math.floor(this.YBound[y][0] + (this.YBound[y][1] - this.YBound[y][0]) / 2 + this.ImageElement.height / 750 * 15));
+            this.drawText(x, y);
         }
         if (this.ModifyingItem.delete) {
             this.Ctx.drawImage(this.ImageElement, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1, this.XBound[x][0] + 1, this.YBound[y][0] + 1, this.XBound[x][1] - this.XBound[x][0] - 1, this.YBound[y][1] - this.YBound[y][0] - 1);
@@ -665,15 +666,67 @@ export class AutoDetectHashComponent implements OnInit {
         dialog.open();
     }
     AcceptFixNumber() {
-        for (let i=0,all=this.FixingNumberData.length;i<all;i++) {
-            if(this.FixingNumberData[i].realData !== null) {
-                this.NumberHash[this.FixingNumberData[i].realData]=this.FixingNumberData[i].hash;
+        for (let i = 0, all = this.FixingNumberData.length; i < all; i++) {
+            if (this.FixingNumberData[i].realData !== null) {
+                this.NumberHash[this.FixingNumberData[i].realData] = this.FixingNumberData[i].hash;
             }
         }
         this.fetchService.setLocalStorage('detect-hash', {
             NumberHash: this.NumberHash,
             ItemHash: this.ItemHashList
         });
+    }
+    drawText(...pos: number[]) {
+        this.Ctx.fillStyle = '#5c638a';
+        if (pos.length === 0) {
+            this.setProgress('正在绘制文字', 0.95);
+            return new Promise((reduce, reject) => {
+                setTimeout(() => {
+                    for (let y = 0, Yall = this.detectedItemList.length; y < Yall; y++) {
+                        for (let x = 0, Xall = this.detectedItemList[y].length; x < Xall; x++) {
+                            const width = this.XBound[x][1] - this.XBound[x][0];
+                            const height = this.YBound[y][1] - this.YBound[y][0];
+                            const fontSize = this.getSuitFontSize(this.detectedItemList[y][x].name, width, height);
+                            this.Ctx.font = fontSize + 'px serif';
+                            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) );
+                            const NumberString = (this.detectedItemList[y][x].have / 10000 >= 1) ? Math.round(this.detectedItemList[y][x].have / 100) / 100 + '万' : this.detectedItemList[y][x].have.toString();
+                            // this.Ctx.font = this.getSuitFontSize(NumberString, width) + 'px serif';
+                            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) + fontSize);
+                        }
+                    }
+                    reduce();
+                }, 25);
+            });
+        } else {
+            const x = pos[0];
+            const y = pos[1];
+            const width = this.XBound[x][1] - this.XBound[x][0];
+            const height = this.YBound[y][1] - this.YBound[y][0];
+            const fontSize = this.getSuitFontSize(this.detectedItemList[y][x].name, width, height);
+            this.Ctx.font = fontSize + 'px serif';
+            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2));
+            const NumberString = (this.detectedItemList[y][x].have / 10000 >= 1) ? Math.round(this.detectedItemList[y][x].have / 100) / 100 + '万' : this.detectedItemList[y][x].have.toString();
+            // this.Ctx.font = this.getSuitFontSize(NumberString, width) + 'px serif';
+            this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) + fontSize);
+        }
+    }
+    getSuitFontSize(text: string, width: number, height: number): number {
+        if (!this.MaxFontSize) {
+            if (this.FontSize === 0) {
+                this.MaxFontSize = true;
+                this.FontSize = this.getSuitFontSize('技能概要·卷3', width, height);
+                this.MaxFontSize = false;
+            }
+            return this.FontSize;
+        }
+        let BaseFontSize = 10;
+        while (true) {
+            this.Ctx.font = BaseFontSize + 'px serif';
+            if (this.Ctx.measureText(text).width > width || BaseFontSize * 2 + 10 > height) {
+                return BaseFontSize - 1;
+            }
+            BaseFontSize++;
+        }
     }
 }
 
