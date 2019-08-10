@@ -47,9 +47,10 @@
       <li mdcListItem>
         <div mdcFormField>
           <div mdcTextField dense class="input-field" style="width:80%;">
-            <input mdcTextFieldInput [(ngModel)]="detectColor" (change)="saveSettings()" />
+            <input mdcTextFieldInput [(ngModel)]="detectColor" (change)="saveSettings()" (input)="saveSettings()"/>
             <label mdcFloatingLabel class="mdc-floating-label--float-above">自动导入(hash):文字颜色代码</label>
           </div>
+          <label mdcFormFieldLabel></label>
         </div>
       </li>
       <li mdcListDivider></li>
