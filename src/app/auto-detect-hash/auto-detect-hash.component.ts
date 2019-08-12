@@ -49,7 +49,7 @@ export class AutoDetectHashComponent implements OnInit {
         万: '0000100000010000000100000001000100100001001000010110000111000001'
     };
     MaxFontSize = true;
-    FontSize = 0 ;
+    FontSize = 0;
     constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router, private el: ElementRef) {
     }
 
@@ -688,11 +688,10 @@ export class AutoDetectHashComponent implements OnInit {
                         for (let x = 0, Xall = this.detectedItemList[y].length; x < Xall; x++) {
                             const width = this.XBound[x][1] - this.XBound[x][0];
                             const height = this.YBound[y][1] - this.YBound[y][0];
-                            const fontSize = this.getSuitFontSize(this.detectedItemList[y][x].name, width, height);
-                            this.Ctx.font = fontSize + 'px serif';
-                            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) );
                             const NumberString = (this.detectedItemList[y][x].have / 10000 >= 1) ? Math.round(this.detectedItemList[y][x].have / 100) / 100 + '万' : this.detectedItemList[y][x].have.toString();
-                            // this.Ctx.font = this.getSuitFontSize(NumberString, width) + 'px serif';
+                            const fontSize = Math.min(this.getSuitFontSize(this.detectedItemList[y][x].name, width, height), this.getSuitFontSize(NumberString, width, height));
+                            this.Ctx.font = fontSize + 'px serif';
+                            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2));
                             this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) + fontSize);
                         }
                     }
@@ -704,11 +703,11 @@ export class AutoDetectHashComponent implements OnInit {
             const y = pos[1];
             const width = this.XBound[x][1] - this.XBound[x][0];
             const height = this.YBound[y][1] - this.YBound[y][0];
-            const fontSize = this.getSuitFontSize(this.detectedItemList[y][x].name, width, height);
-            this.Ctx.font = fontSize + 'px serif';
-            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2));
             const NumberString = (this.detectedItemList[y][x].have / 10000 >= 1) ? Math.round(this.detectedItemList[y][x].have / 100) / 100 + '万' : this.detectedItemList[y][x].have.toString();
             // this.Ctx.font = this.getSuitFontSize(NumberString, width) + 'px serif';
+            const fontSize = Math.min(this.getSuitFontSize(this.detectedItemList[y][x].name, width, height), this.getSuitFontSize(NumberString, width, height));
+            this.Ctx.font = fontSize + 'px serif';
+            this.Ctx.fillText(this.detectedItemList[y][x].name, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2));
             this.Ctx.fillText(NumberString, Math.floor(this.XBound[x][0] + (width) / 2), Math.floor(this.YBound[y][0] + (height) / 2) + fontSize);
         }
     }
