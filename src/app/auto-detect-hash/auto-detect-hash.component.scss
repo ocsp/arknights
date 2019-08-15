@@ -1,0 +1,50 @@
+img[src=""],
+img:not([src]) {
+  opacity: 0;
+}
+input,
+select {
+  text-align: center;
+}
+.mdc-button--dense {
+  min-width: 20px;
+}
+.mdc-text-field--upgraded:not(.mdc-text-field--fullwidth):not(.mdc-text-field--box) {
+  margin: 0;
+}
+.ad-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  .card-title {
+    max-width: 100%;
+    width: 400;
+    padding: 0.25em;
+    display: block;
+  }
+}
+
+[mdcCard] {
+  margin: 0.5em;
+
+  .mat-icon {
+    max-height: 48px;
+    max-width: 48px;
+    height: auto;
+    width: auto;
+  }
+  .matcard-item {
+    padding: 0.25em;
+  }
+}
+[mdcLinearProgress] {
+  max-width:1200px;
+  margin:0 auto 10px auto;
+}
+canvas {
+  width:100%;
+  max-width:  1200px;
+}
+.select {
+  border:blue 2px solid;
+}

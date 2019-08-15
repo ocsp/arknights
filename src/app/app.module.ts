@@ -23,6 +23,7 @@ import { CharMatCharcardComponent } from './char-mat-charcard/char-mat-charcard.
 import { CharMatMatcardComponent } from './char-mat-matcard/char-mat-matcard.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AutoDetectComponent } from './auto-detect/auto-detect.component';
+import { AutoDetectHashComponent } from './auto-detect-hash/auto-detect-hash.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { AutoDetectComponent } from './auto-detect/auto-detect.component';
     CharMatCharcardComponent,
     CharMatMatcardComponent,
     SettingsComponent,
-    AutoDetectComponent
+    AutoDetectComponent,
+    AutoDetectHashComponent
   ],
   imports: [
     BrowserModule,

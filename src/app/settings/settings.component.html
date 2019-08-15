@@ -21,9 +21,28 @@
       <li mdcListItem>
         <div mdcFormField>
           <div mdcSwitch>
-            <input mdcSwitchInput type="checkbox" [(ngModel)]="isExtraSmall" (change)="saveSettings()"/>
+            <input mdcSwitchInput type="checkbox" [(ngModel)]="isExtraSmall" (change)="saveSettings()" />
           </div>
           <label mdcFormFieldLabel>超小屏幕模式</label>
+        </div>
+      </li>
+      <li mdcListDivider></li>
+      <li mdcListItem>
+        <div mdcFormField>
+          <div mdcSwitch>
+            <input mdcSwitchInput type="checkbox" [(ngModel)]="isMaxFontSize" (change)="saveSettings()" />
+          </div>
+          <label mdcFormFieldLabel>自动导入(hash):最大字体模式</label>
+        </div>
+      </li>
+      <li mdcListDivider></li>
+      <li mdcListItem>
+        <div mdcFormField>
+          <div mdcTextField dense class="input-field" style="width:80%;">
+            <input mdcTextFieldInput [(ngModel)]="detectColor" (change)="saveSettings()" (input)="saveSettings()"/>
+            <label mdcFloatingLabel class="mdc-floating-label--float-above">自动导入(hash):文字颜色</label>
+          </div>
+          <label mdcFormFieldLabel></label>
         </div>
       </li>
       <li mdcListDivider></li>
