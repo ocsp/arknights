@@ -3,7 +3,7 @@ import { HrData } from '../model/hrdata';
 import { HrComb } from '../model/hrcomb';
 import { FetchService } from '../fetch.service';
 import { MdcSnackbarService } from '@blox/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,7 +22,6 @@ export class HrComponent implements OnInit {
   selectedStars: Array<number> = [1, 2, 3, 4, 5, 6];
   charSelected = '';
   option = 0;
-
   onSelectTagChanged(selected: Array<string>): void {
     this.selectedTags = selected;
     this.calculateCombs();
@@ -32,7 +31,14 @@ export class HrComponent implements OnInit {
     this.calculateCombs();
   }
 
-  constructor(private fetch: FetchService, private snackbar: MdcSnackbarService, private router: Router) { }
+  constructor(private fetch: FetchService,
+              private snackbar: MdcSnackbarService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.selectedTags = ('tags' in params) ? params.tags.split(' ') : [];
+      });
+     }
 
   ngOnInit() {
     this.hrdata = new HrData();
@@ -73,7 +79,10 @@ export class HrComponent implements OnInit {
           }
         }
         this.chars[name] = { level: char.level, tags: char.tags };
+        if (this.selectedTags.length !== 0) {
+        }
       }
+      this.calculateCombs();
     });
   }
 

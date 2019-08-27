@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HrTagRow } from '../model/hrtagrow';
 import { MdcSnackbarService } from '@blox/material';
 import { FetchService } from '../fetch.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-hr-tags',
@@ -14,15 +15,15 @@ export class HrTagsComponent implements OnInit {
   selectedTags: Array<string>;
   @Output() reportSelectedTags = new EventEmitter();
   @Output() reportSelectedStars = new EventEmitter();
-  selectedStars: Array<boolean> = this.fetch.getLocalStorage("hr-stars",[true, true, true, true, true, true, true]);
+  selectedStars: Array<boolean> = this.fetch.getLocalStorage('hr-stars', [true, true, true, true, true, true, true]);
   epoch = 0;
-  @Input() 
-  set reset(reset: Number){
-    if(reset!=this.epoch){
-      this.selectedTags=[];
+  @Input()
+  set reset(reset: Number) {
+    if (reset != this.epoch) {
+      this.selectedTags = [];
     }
     this.reportSelectedTags.emit(this.tagrows);
-  };
+  }
 
   onStarBtnClick(id): void {
     if (id === 0) {
@@ -42,7 +43,7 @@ export class HrTagsComponent implements OnInit {
     for (let i = 1; i < 7; i++) {
       if (this.selectedStars[i]) { stars.push(i); }
     }
-    this.fetch.setLocalStorage("hr-stars",this.selectedStars);
+    this.fetch.setLocalStorage('hr-stars', this.selectedStars);
     this.reportSelectedStars.emit(stars);
   }
   onTagClick(tag: string): void {
@@ -65,8 +66,13 @@ export class HrTagsComponent implements OnInit {
       actionOnBottom: false
     });
   }
-  constructor(private snackbar: MdcSnackbarService,private fetch:FetchService) {
-    this.selectedStars=this.fetch.getLocalStorage("hr-stars",[true, true, true, true, true, true, true]);
+  constructor(private snackbar: MdcSnackbarService, 
+              private fetch: FetchService,
+              private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.selectedTags = ('tags' in params) ? params.tags.split(' ') : [];
+    });
+    this.selectedStars = this.fetch.getLocalStorage('hr-stars', [true, true, true, true, true, true, true]);
   }
   ngOnInit() {
     this.selectedTags = [];

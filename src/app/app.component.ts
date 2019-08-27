@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { MdcSnackbarService } from '@blox/material';
 import { SwUpdate } from '@angular/service-worker';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 declare var ga: Function;
 
 @Component({
@@ -16,6 +16,7 @@ export class AppComponent {
   baseUrl: string;
   nav: any;
   temporary = 'temporary';
+  showNavbar = true;
 
   toggleDrawer(): void {
     this.drawerOpen = !this.drawerOpen;
@@ -30,7 +31,10 @@ export class AppComponent {
     });
   }
 
-  constructor(private snackBar: MdcSnackbarService, private swUpdate: SwUpdate, private router: Router) {
+  constructor(private snackBar: MdcSnackbarService,
+              private swUpdate: SwUpdate,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
     this.baseUrl = window.location.origin;
     this.nav = window.navigator;
     if (this.swUpdate.isEnabled) {
@@ -53,6 +57,9 @@ export class AppComponent {
         ga('set', 'page', event.urlAfterRedirects);
         ga('send', 'pageview');
       }
+    });
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.showNavbar = !('hidenav' in params);
     });
   }
   doUpdate() {
