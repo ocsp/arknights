@@ -19,7 +19,7 @@ export class HrComponent implements OnInit {
   tags: {};
   chars: {};
   selectedTags: Array<string> = [];
-  selectedStars: Array<number> = [1, 2, 3, 4, 5, 6];
+  selectedStars: Array<number> = [];
   charSelected = '';
   option = 0;
   showTags = true;
@@ -40,6 +40,10 @@ export class HrComponent implements OnInit {
         this.selectedTags = ('tags' in params) ? params.tags.split(' ') : [];
         this.showTags = !('hidetags' in params);
       });
+      const selectedStars = this.fetch.getLocalStorage('hr-stars', [true, true, true, true, true, true, true]);
+      for (let i = 1; i < 7; i++) {
+        if (selectedStars[i]) { this.selectedStars.push(i); }
+      }
      }
 
   ngOnInit() {
