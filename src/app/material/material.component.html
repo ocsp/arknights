@@ -4,7 +4,8 @@
       <h2 mdcDialogHeaderTitle>材料路径规划（试行，仅供参考）</h2>
     </header>
     <section mdcDialogBody scrollable>
-      <h4>by <a href="https://github.com/ycremar/ArkPlanner">@ycremar</a>(算法) & <a href="https://github.com/invisiblearts/ArkPlanner">@invisiblearts</a>(数据)</h4>
+      <h4>by <a href="https://github.com/ycremar/ArkPlanner">@ycremar</a>(算法) & <a
+          href="https://github.com/invisiblearts/ArkPlanner">@invisiblearts</a>(数据)</h4>
       <h4>体力预计消耗：<strong>{{cost}}</strong></h4>
       <ng-container *ngIf="stagesText.length!==0">
         <h4>刷本获取：</h4>
@@ -18,7 +19,7 @@
           <li mdcListItem *ngFor="let sy of synsText">{{sy}}</li>
         </ul>
       </ng-container>
-  
+
     </section>
     <footer mdcDialogFooter>
       <button mdcButton mdcDialogCancel>关闭</button>
@@ -28,24 +29,30 @@
   <div mdcDialogBackdrop></div>
 </aside>
 <div fxLayout="row wrap" fxLayoutAlign="center center">
-  <div fxLayout="row" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="end center" fxLayoutGap="1%" class="options-box">
-    <div mdcFormField>
-      <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
-    </div>
-    <div mdcFormField>
-      <div mdcSwitch>
-        <input mdcSwitchInput type="checkbox" [(ngModel)]="options.showOnly3plus" (change)="onOptionChange()" />
+  <div fxLayout="row wrap" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="end center" fxLayoutGap="1%" class="options-box">
+    <div fxLayout="row wrap" fxFlex="100" fxFlex.gt-xs="30" fxLayoutAlign="start center">
+      <div mdcFormField fxFlex="100">
+        <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
       </div>
-      <label mdcFormFieldLabel>3★及以上</label>
-    </div>
-    <div mdcFormField>
-      <div mdcSwitch>
-        <input mdcSwitchInput type="checkbox" [(ngModel)]="options.filtered" (change)="onOptionChange()" />
+      <div fxFlex="100" fxShow="true" fxShow.gt-xs="false" class="sepatator">
       </div>
-      <label mdcFormFieldLabel>过滤</label>
     </div>
-    <div mdcFormField>
-      <button mdcButton raised dense (click)="plan();dialogPlan.open()">规划</button>
+    <div fxLayout="row" fxFlex="100" fxFlex.gt-xs="65" fxLayoutAlign="end center">
+      <div mdcFormField>
+        <div mdcSwitch>
+          <input mdcSwitchInput type="checkbox" [(ngModel)]="options.showOnly3plus" (change)="onOptionChange()" />
+        </div>
+        <label mdcFormFieldLabel>3★及以上</label>
+      </div>
+      <div mdcFormField>
+        <div mdcSwitch>
+          <input mdcSwitchInput type="checkbox" [(ngModel)]="options.filtered" (change)="onOptionChange()" />
+        </div>
+        <label mdcFormFieldLabel>过滤</label>
+      </div>
+      <div mdcFormField>
+        <button mdcButton raised dense (click)="plan();dialogPlan.open()">刷图规划</button>
+      </div>
     </div>
   </div>
   <div fxLayout="row" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="start center" fxLayoutGap="1%" class="options-box">
@@ -72,7 +79,8 @@
     <ng-container *ngFor="let item of items; trackBy:trackItem">
       <div fxFlex="50" fxFlex.gt-xs="33" fxFlex.gt-sm="25" fxFlex.gt-md="16" class="padding-025"
         [hidden]="((options.filtered&&(!(data[item.name].have||data[item.name].need||data[item.name].lack)))||(options.showOnly3plus&&item.id.startsWith('30')&&(item.rarity<3))||(!options.showMat&&(item.id.startsWith('30'))||(!options.showBook&&(item.id.startsWith('33'))||(!(options.showChip)&&(item.id.startsWith('32'))))))">
-        <app-material-card [item]="item" [itemdata]="data[item.name]" (dataChange)="onDataChange($event)" (reportMerge)="onMatMerge($event)"></app-material-card>
+        <app-material-card [item]="item" [itemdata]="data[item.name]" (dataChange)="onDataChange($event)"
+          (reportMerge)="onMatMerge($event)"></app-material-card>
       </div>
     </ng-container>
   </div>
