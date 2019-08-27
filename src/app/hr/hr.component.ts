@@ -186,8 +186,12 @@ export class HrComponent implements OnInit {
   clearTags() {
     const currentUrl = this.router.url;
     const param = currentUrl.includes('hidenav') ? '?hidenav=' : '';
-    this.router.navigateByUrl('/' + param, { skipLocationChange: true }).then(() => {
-      this.router.navigateByUrl(currentUrl.substring(0, currentUrl.indexOf('?')) + param);
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      if(currentUrl.indexOf('?')>0){
+        this.router.navigateByUrl(currentUrl.substring(0, currentUrl.indexOf('?')) + param);
+      }else{
+        this.router.navigateByUrl(currentUrl);
+      }
     });
   }
   toggleOption() {
