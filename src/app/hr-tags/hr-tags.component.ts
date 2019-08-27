@@ -16,14 +16,6 @@ export class HrTagsComponent implements OnInit {
   @Output() reportSelectedTags = new EventEmitter();
   @Output() reportSelectedStars = new EventEmitter();
   selectedStars: Array<boolean> = this.fetch.getLocalStorage('hr-stars', [true, true, true, true, true, true, true]);
-  epoch = 0;
-  @Input()
-  set reset(reset: Number) {
-    if (reset != this.epoch) {
-      this.selectedTags = [];
-    }
-    this.reportSelectedTags.emit(this.tagrows);
-  }
 
   onStarBtnClick(id): void {
     if (id === 0) {
@@ -66,7 +58,7 @@ export class HrTagsComponent implements OnInit {
       actionOnBottom: false
     });
   }
-  constructor(private snackbar: MdcSnackbarService, 
+  constructor(private snackbar: MdcSnackbarService,
               private fetch: FetchService,
               private activatedRoute: ActivatedRoute) {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -75,7 +67,6 @@ export class HrTagsComponent implements OnInit {
     this.selectedStars = this.fetch.getLocalStorage('hr-stars', [true, true, true, true, true, true, true]);
   }
   ngOnInit() {
-    this.selectedTags = [];
   }
 
 }

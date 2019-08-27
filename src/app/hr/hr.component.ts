@@ -179,8 +179,9 @@ export class HrComponent implements OnInit {
   }
   clearTags() {
     const currentUrl = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigateByUrl(currentUrl);
+    const param = currentUrl.includes('hidenav') ? '?hidenav=' : '';
+    this.router.navigateByUrl('/' + param, { skipLocationChange: true }).then(() => {
+      this.router.navigateByUrl(currentUrl.substring(0, currentUrl.indexOf('?')) + param);
     });
   }
   toggleOption() {
