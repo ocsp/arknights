@@ -22,6 +22,7 @@ export class HrComponent implements OnInit {
   selectedStars: Array<number> = [1, 2, 3, 4, 5, 6];
   charSelected = '';
   option = 0;
+  showTags = true;
   onSelectTagChanged(selected: Array<string>): void {
     this.selectedTags = selected;
     this.calculateCombs();
@@ -37,6 +38,7 @@ export class HrComponent implements OnInit {
               private activatedRoute: ActivatedRoute) {
       this.activatedRoute.queryParams.subscribe(params => {
         this.selectedTags = ('tags' in params) ? params.tags.split(' ') : [];
+        this.showTags = !('hidetags' in params);
       });
      }
 

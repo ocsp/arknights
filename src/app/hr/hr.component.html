@@ -1,10 +1,10 @@
 <div fxLayout="row wrap" class="hr-viewport">
-  <div fxFlex="100%" fxFlex.gt-sm="39%" [ngClass.gt-sm]="{'float-box': true}">
+  <div *ngIf="showTags" fxFlex="100%" fxFlex.gt-sm="39%" [ngClass.gt-sm]="{'float-box': true}">
     <div [ngClass.gt-sm]="{'tagrows-container':true}">
       <app-hr-tags [tagrows]="hrdata.tagrows" (reportSelectedTags)="onSelectTagChanged($event)"
         (reportSelectedStars)="onSelectStarChanged($event)"></app-hr-tags>
       <div fxLayout="row inline">
-        <div><button mdcButton raised id="btnClear" (click)="clearTags()">清空</button></div>
+        <div ><button mdcButton raised id="btnClear" (click)="clearTags()">清空</button></div>
         <div><button mdcButton raised [ngClass]="'option-'+option" id="btnOption"
             (click)="toggleOption()">切换TAG位置</button></div>
       </div>
