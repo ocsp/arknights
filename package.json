@@ -25,6 +25,7 @@
     "@angular/service-worker": "~8.0.0",
     "@blox/material": "^0.17.0",
     "fonts.css": "^2.0.0",
+    "msgpack-lite": "^0.1.26",
     "ngx-clipboard": "^12.1.0",
     "ngx-pica": "^1.1.4",
     "rollup": "^1.16.2",
