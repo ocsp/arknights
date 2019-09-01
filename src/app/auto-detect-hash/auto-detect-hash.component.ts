@@ -48,6 +48,7 @@ export class AutoDetectHashComponent implements OnInit {
         0: '0011001101100001110000011100000011000000110000010110000100110111',
         万: '0000100000010000000100000001000100100001001000010110000111000001'
     };
+    HighQNumberHash = {};
     MaxFontSize = true;
     FontSize = 0;
     constructor(private fetchService: FetchService, private snackbar: MdcSnackbarService, private router: Router, private el: ElementRef) {
@@ -230,10 +231,10 @@ export class AutoDetectHashComponent implements OnInit {
                             SingleNumber.canvas.width = 9;
                             SingleNumber.canvas.height = 8;
                             // 数值范围显示:this.Ctx.fillRect(realLeft + XNumberBound[i][0], realTop+YNumberBound[i][0], XNumberBound[i][1] - XNumberBound[i][0], YNumberBound[i][1] - YNumberBound[i][0]);
-                            SingleNumber.drawImage(NumberBuffer.canvas, XNumberBound[i][0], YNumberBound[i][0], XNumberBound[i][1] - XNumberBound[i][0], YNumberBound[i][1] - YNumberBound[i][0], 0, 0, 9, 8);
+                            SingleNumber.drawImage(NumberBuffer.canvas, XNumberBound[i][0], YNumberBound[i][0], XNumberBound[i][1] - XNumberBound[i][0], YNumberBound[i][1] - YNumberBound[i][0], 0, 0, SingleNumber.canvas.width, SingleNumber.canvas.height);
                             const SingleNumberData = SingleNumber.getImageData(0, 0, SingleNumber.canvas.width, SingleNumber.canvas.height).data;
                             for (let j = 0, dataAll = SingleNumberData.length; j < dataAll; j += 4) {
-                                if (Math.floor(j / 4) % 9 === 8) { continue; }
+                                if (Math.floor(j / 4) % SingleNumber.canvas.width === (SingleNumber.canvas.width - 1)) { continue; }
                                 hash += (Math.floor((SingleNumberData[j] + SingleNumberData[j + 1] + SingleNumberData[j + 2]) / 3) > Math.floor((SingleNumberData[j + 4] + SingleNumberData[j + 5] + SingleNumberData[j + 6]) / 3)) ? '1' : '0';
                             }
                             let Q = Infinity;
@@ -251,14 +252,12 @@ export class AutoDetectHashComponent implements OnInit {
                                 }
                             }
                             NumberString += Q > 15 ? '' : Value; // 去噪声
-                            if (Q <= 15) {
-                                const TempCanvas = document.createElement('canvas').getContext('2d');
-                                TempCanvas.canvas.width = XNumberBound[i][1] - XNumberBound[i][0];
-                                TempCanvas.canvas.height = YNumberBound[i][1] - YNumberBound[i][0];
-                                TempCanvas.drawImage(this.ImageElement, realLeft + XNumberBound[i][0], realTop + YNumberBound[i][0], TempCanvas.canvas.width, TempCanvas.canvas.height, 0, 0, TempCanvas.canvas.width, TempCanvas.canvas.height);
-                                this.NumberData[y][x].push({ hash, src: TempCanvas.canvas.toDataURL(), realData: null });
-                                TempCanvas.canvas.remove();
-                            }
+                            const TempCanvas = document.createElement('canvas').getContext('2d');
+                            TempCanvas.canvas.width = XNumberBound[i][1] - XNumberBound[i][0];
+                            TempCanvas.canvas.height = YNumberBound[i][1] - YNumberBound[i][0];
+                            TempCanvas.drawImage(this.ImageElement, realLeft + XNumberBound[i][0], realTop + YNumberBound[i][0], TempCanvas.canvas.width, TempCanvas.canvas.height, 0, 0, TempCanvas.canvas.width, TempCanvas.canvas.height);
+                            this.NumberData[y][x].push({ hash, src: TempCanvas.canvas.toDataURL(), realData: null });
+                            TempCanvas.canvas.remove();
                             SingleNumber.canvas.remove();
                         }
                         if (NumberString.indexOf('.') === -1 || /万\d+/.test(NumberString)) {
@@ -303,8 +302,8 @@ export class AutoDetectHashComponent implements OnInit {
                         this.detectedItemList[y][x].have = Number(NumberString);
                     }
                     */
-                        // console.log(easyData);
-                        // console.log(XNumberBound);
+                        // //console.log(easyData);
+                        // //console.log(XNumberBound);
                     }
                 }
                 resolve();
@@ -453,10 +452,12 @@ export class AutoDetectHashComponent implements OnInit {
         this.setProgress('扫描图像边界', 0.2);
         const XBlank = Array(this.Canvas.width).fill(0);
         const YBlank = Array(this.Canvas.height).fill(0);
+        const XSpace = Array(this.Canvas.height).fill(0);
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                // console.time("a");
-                for (let y = 100; y < this.Canvas.height; y++) {
+                // //console.time("a");
+                for (let y = 100, BlackPoint = -1; y < this.Canvas.height; y++) {
+                    let LastBlank = 0;
                     for (let x = 15; x < this.Canvas.width - 1; x++) {
                         const GreyList = [
                             [this.getPixelGrey(x - 1, y - 1), this.getPixelGrey(x, y - 1), this.getPixelGrey(x + 1, y - 1)],
@@ -478,13 +479,22 @@ export class AutoDetectHashComponent implements OnInit {
                             }
                             return true;
                         })()) {
+                            if (LastBlank === 0) {
+                                LastBlank = x;
+                            } else {
+                                XSpace[y] += (x - LastBlank);
+                                LastBlank = x;
+                                BlackPoint++;
+                            }
                             YBlank[y]++;
                             XBlank[x]++;
                         }
                     }
+                    XSpace[y] /= BlackPoint;
                 }
+                // console.log(XSpace);
                 this.ImageGreyData = {};
-                // console.timeEnd("a");
+                // //console.timeEnd("a");
                 resolve();
             }, 25);
         }).then(() => {
@@ -513,13 +523,14 @@ export class AutoDetectHashComponent implements OnInit {
                             }
                         }
                         if (isObject && YBlank[y] > (this.YBound.length < 3 ? 5 : 20)) {
-                            LastBlank = y;
+                            LastBlank = XSpace[y] > 0.01 ? y : LastBlank;
                             SpaceLength = 0;
                         }
                         if (isObject) {
                             ItemHeight++;
                         }
                     }
+                    // console.log(this.YBound);
                     resolve();
                 }, 25);
             });
@@ -554,7 +565,7 @@ export class AutoDetectHashComponent implements OnInit {
                             ItemWidth++;
                         }
                     }
-                    // console.log(XBlank);
+                    // //console.log(XBlank);
                     resolve();
                 }, 25);
             });
@@ -599,7 +610,7 @@ export class AutoDetectHashComponent implements OnInit {
         }
         this.Modifying.y = y;
         this.Modifying.x = x;
-        // console.dir(dialog);
+        // //console.dir(dialog);
         dialog.open();
     }
     AcceptModify() {
@@ -671,6 +682,14 @@ export class AutoDetectHashComponent implements OnInit {
         for (let i = 0, all = this.FixingNumberData.length; i < all; i++) {
             if (this.FixingNumberData[i].realData !== null) {
                 this.NumberHash[this.FixingNumberData[i].realData] = this.FixingNumberData[i].hash;
+                /*if (this.FixingNumberIndex === i) {
+                    this.HighQNumberHash[this.FixingNumberData[i].realData] = this.HighQNumberHash[this.FixingNumberData[i].realData] || { hash: new Array(144).fill(0), count: 0 };
+                    this.HighQNumberHash[this.FixingNumberData[i].realData].hash = this.HighQNumberHash[this.FixingNumberData[i].realData].hash.map((item: number, index: number) => {
+                        return item + Number(this.FixingNumberData[i].hash[index]);
+                    });
+                    this.HighQNumberHash[this.FixingNumberData[i].realData].count++;
+                    console.log(this.HighQNumberHash);
+                }*/
             }
         }
         this.fetchService.setLocalStorage('detect-hash', {
