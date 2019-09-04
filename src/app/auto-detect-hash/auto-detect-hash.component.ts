@@ -74,6 +74,7 @@ export class AutoDetectHashComponent implements OnInit {
         this.ImageElement = document.createElement('img');
         this.Canvas = this.el.nativeElement.getElementsByTagName('canvas')[0];
         this.Ctx = this.Canvas.getContext('2d');
+        this.onPasteImage();
     }
     choiceImage(event) {
         const ImageContainer = event.target;
@@ -87,6 +88,27 @@ export class AutoDetectHashComponent implements OnInit {
         this.ItemGreyData = [];
         this.detectedItemList = [];
         this.ItemHash = [];
+    }
+    onPasteImage() {
+        const ctx = this;
+        document.addEventListener("paste", function (event) {
+            const items = event.clipboardData && event.clipboardData.items;
+            if (items && items.length) {
+                if (items[0].type.indexOf("image") !== -1) {
+                    const file = items[0].getAsFile();
+                    const Reader = new FileReader();
+                    Reader.onload = e => {
+                        ctx.LoadImage(Reader.result.toString());
+                    };
+                    Reader.readAsDataURL(file);
+                    ctx.XBound = [];
+                    ctx.YBound = [];
+                    ctx.ItemGreyData = [];
+                    ctx.detectedItemList = [];
+                    ctx.ItemHash = [];
+                }
+            }
+        });
     }
     LoadImage(src: string) {
         this.ImageElement.src = src;
