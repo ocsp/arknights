@@ -1,19 +1,20 @@
 import re
 import json
-
+import requests
 
 def readJson(path):
-    with open(path, encoding="utf-8") as f:
-        js = json.load(f)
-        return js
+    r=requests.get(path)
+    if r.status_code==200:
+        return json.loads(r.content,encoding="utf-8")
+    return None
 
 
-skillTbl = readJson("./excel/skill_table.json")
+skillTbl = readJson("https://raw.githubusercontent.com/Perfare/ArknightsGameData/master/excel/skill_table.json")
 skidToName = {}
 for skid in skillTbl:
     skidToName[skid] = skillTbl[skid]['levels'][0]['name']
 
-charTbl = readJson("./excel/character_table.json")
+charTbl = readJson("https://raw.githubusercontent.com/Perfare/ArknightsGameData/master/excel/character_table.json")
 result = {}
 profMap = {
     'MEDIC': '医疗',
