@@ -4,9 +4,6 @@
       <div class="p-25">
         <button mdcButton outlined class="btn-tag" *ngFor="let tag of comb.tags">{{tag}}</button>
       </div>
-      <div fxShow.lt-sm="false">
-        <div mdcChip raised>{{comb.score| number : '1.2-2'}}</div>
-      </div>
     </div>
     <hr mdcListDivider>
     <div class="p-25">
