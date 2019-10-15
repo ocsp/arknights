@@ -1,0 +1,19 @@
+# Publish to Github pages
+# Get your token from https://github.com/settings/tokens
+TOKEN=AAAAAAAAAAAAAAAAAAAAAAAA
+CNAME=aktools.graueneko.xyz
+REPO=github.com/graueneko/aktools.git
+PROJECT=aktools
+
+ng build --prod --base-href "https://$CNAME/" && npx angular-cli-ghpages --dir=dist/$PROJECT --repo=https://$TOKEN@$REPO --no-silent --cname=$CNAME --email=sczhg@sczhg.info --name="graueneko"
+
+
+# Publish to Tencent Pages
+# Get your token from https://dev.tencent.com/user/account/setting/tokens
+TOKEN=AAAAAAAAAAAAAAAAAAAAAAAA
+CNAME=aktoolscn.graueneko.xyz
+REPO=
+PROJECT=aktools
+
+ng build --prod --base-href "https://$CNAME/" && npx angular-cli-ghpages --dir=dist/$PROJECT --repo=https://$TOKEN@$REPO --no-silent --cname=$CNAME --email=graueneko@gmail.com --name="graueneko" --branch=coding-pages
+
