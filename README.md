@@ -5,6 +5,18 @@
 
 目前已部署在Github Pages：[明日方舟工具箱 by 一只灰猫](https://aktools.graueneko.xyz/)
 
+## 二次开发
+
+页面允许URL中加入参数以修改显示样式。
+
+包括三个参数，可以分别使用，以嵌入到您二次开发的app中：`hidenav`，`hidetags`以及`tags`。
+
+其中hidenav全局有效，hidetags和tags仅对公开招募页面有效。
+
+例如：
+[https://aktools.graueneko.xyz/hr?hidenav=&hidetags=&tags=女性干员+爆发+新手+资深干员+快速复活](https://aktools.graueneko.xyz/hr?hidenav=&hidetags=&tags=女性干员+爆发+新手+资深干员+快速复活)
+
+
 ## 反馈
 
 有任何建议、想法，或发现Bug，可以直接在本项目下提[Issue](https://github.com/graueneko/aktools/issues)。
@@ -34,3 +46,6 @@ ng serve -o
 ng build --prod --base-href "http[s]://*YOUR_URL*/"
 ```
 可部署的site版本将生成在./dist/aktools目录下。
+
+## 发布
+请参照`publish.sh.example`中说明修改脚本内容，之后可用于一键发布。

@@ -1,10 +1,11 @@
 <div class="main-container">
     <h2>明日方舟工具箱 by 一只灰猫</h2>
     <p>欢迎使用明日方舟工具箱，请在导航栏选择相应功能使用。</p>
+    <p *ngIf="!cn" class="notice"><a href="https://aktoolscn.graueneko.xyz">国内用户请点这里</a></p>
+    <p *ngIf="cn" class="notice"><a href="https://aktools.graueneko.xyz">国际用户请点这里</a></p>
     &nbsp;
     <p>Tip: 移动端和平板用户可以将任意页面添加到桌面，获得与本地App相同的使用体验：快速加载，离线使用，自动更新。</p>
     <p>详情请点击右上角<i class="material-icons">help</i>查看。</p>
-    
     <div fxLayout="row wrap">
         <div fxFlex="100" fxFlex.gt-sm="50">
             <h3>已实现功能</h3>

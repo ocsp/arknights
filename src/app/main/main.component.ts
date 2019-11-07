@@ -7,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  cn: boolean;
+
+  constructor() {
+    this.cn = window.location.hostname.includes('cn');
+  }
 
   ngOnInit() {
   }
