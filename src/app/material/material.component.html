@@ -39,7 +39,7 @@
               <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
           </div>
           <div fxLayout="row" fxLayoutAlign="center center">
-            <div mdcTextField [dense]="dense">
+            <div mdcTextField [dense]="true">
               <textarea mdcTextFieldInput type="text" rows="5" cols="60" #input1="ngModel" [(ngModel)]="exportedData"></textarea>
             </div>
             <div fxLayout="row" fxLayoutAlign="center center">
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div fxLayout="row" fxLayoutAlign="center center">
-              <div mdcTextField [dense]="dense">
+              <div mdcTextField [dense]="true">
                 <textarea mdcTextFieldInput type="text" rows="5" cols="60" #input1="ngModel" [(ngModel)]="importedData"></textarea>
               </div>
               <div fxLayout="row" fxLayoutAlign="center center">
