@@ -28,6 +28,8 @@ export class MaterialComponent implements OnInit {
   cost = 0;
   stagesText = [];
   synsText = [];
+  exportedData = '';
+  importedData = '';
 
   calc(): void {
     const counts = {};
@@ -90,6 +92,7 @@ export class MaterialComponent implements OnInit {
     }
     this.data = newData;
     this.fetchService.setLocalStorage('m-data', this.data);
+    this.genExportedData();
   }
 
   onMatMerge(name: string) {
@@ -137,6 +140,7 @@ export class MaterialComponent implements OnInit {
       showChip: true
     };
     this.calc();
+    this.exportedData = '';
   }
 
   ngOnInit() {
@@ -239,5 +243,54 @@ export class MaterialComponent implements OnInit {
         });
       }
     }
+  }
+
+  genExportedData() {
+    const storage = {};
+    for (const name in this.data) {
+      if (this.data[name]) {
+        const d = this.data[name];
+        storage[name] = [
+          d.have, d.need
+        ];
+      }
+    }
+    this.exportedData = JSON.stringify(storage);
+  }
+  async copyExport() {
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(this.exportedData);
+        this.snackbar.show({
+          message: '已复制到剪切板。',
+          actionText: '好的',
+          multiline: false,
+          actionOnBottom: false
+        });
+      } catch (err) {
+        this.snackbar.show({
+          message: '复制失败。',
+          actionText: '好吧',
+          multiline: false,
+          actionOnBottom: false
+        });
+      }
+    }
+  }
+
+  getImportedData() {
+    const storage = JSON.parse(this.importedData);
+    const newData = {};
+    for (const name in storage) {
+      if (storage[name]) {
+        const s = storage[name];
+        const d = new MaterialItemData(name);
+        d.have = s[0];
+        d.need = s[1];
+        newData[name] = d;
+      }
+    }
+    this.data = newData;
+    this.calc();
   }
 }

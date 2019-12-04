@@ -25,7 +25,19 @@ a {
 #btnReset {
   background-color: $color-1;
 }
-.sepatator{
+.sepatator {
   height: 0.5em;
   width: 10em;
+}
+textarea {
+  resize: none;
+}
+
+.mdc-text-field__input {
+  padding: 0.25em 0.75em;
+}
+
+.dialog-data {
+  max-width: 600px;
+  max-height: 500px;
 }

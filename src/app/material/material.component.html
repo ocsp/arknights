@@ -28,11 +28,47 @@
   </div>
   <div mdcDialogBackdrop></div>
 </aside>
+<aside #dialogData="mdcDialog" mdcDialog mdcFocusTrap>
+  <div mdcDialogSurface class="dialog-data">
+    <!-- <header mdcDialogHeader>
+      <h2 mdcDialogHeaderTitle>材料路径规划（试行，仅供参考）</h2>
+    </header> -->
+    <section mdcDialogBody>
+      <div fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="center center">
+              <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <div mdcTextField [dense]="dense">
+              <textarea mdcTextFieldInput type="text" rows="5" cols="60" #input1="ngModel" [(ngModel)]="exportedData"></textarea>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <button mdcButton raised dense id="btnExport" (click)="copyExport()">复制</button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center">
+              <div mdcTextField [dense]="dense">
+                <textarea mdcTextFieldInput type="text" rows="5" cols="60" #input1="ngModel" [(ngModel)]="importedData"></textarea>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="center center">
+                  <button mdcButton raised dense id="btnImport" (click)="getImportedData()">导入</button>
+              </div>
+            </div>
+      </div>
+    </section>
+    <footer mdcDialogFooter>
+      <button mdcButton mdcDialogCancel>关闭</button>
+    </footer>
+  </div>
+  <div mdcDialogBackdrop></div>
+</aside>
 <div fxLayout="row wrap" fxLayoutAlign="center center">
-  <div fxLayout="row wrap" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="end center" fxLayoutGap="1%" class="options-box">
+  <div fxLayout="row wrap" fxFlex="100" fxFlex.gt-sm="50" fxLayoutAlign="end center" fxLayoutGap="1%"
+    class="options-box">
     <div fxLayout="row wrap" fxFlex="100" fxFlex.gt-xs="30" fxLayoutAlign="start center">
       <div mdcFormField fxFlex="100">
-        <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button>
+        <!-- <button mdcButton raised dense id="btnReset" (click)="reset()">重置</button> -->
+        <button mdcButton raised dense id="btnData" (click)="dialogData.open()">重置/导入/导出</button>
       </div>
       <div fxFlex="100" fxShow="true" fxShow.gt-xs="false" class="sepatator">
       </div>
