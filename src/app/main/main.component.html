@@ -1,8 +1,16 @@
 <div class="main-container">
-    <h2>明日方舟工具箱 by 一只灰猫</h2>
-    <p>欢迎使用明日方舟工具箱，请在导航栏选择相应功能使用。</p>
-    <p *ngIf="!cn" class="notice"><a href="https://aktoolscn.graueneko.xyz">国内用户请点这里</a></p>
-    <p *ngIf="cn" class="notice"><a href="https://aktools.graueneko.xyz">国际用户请点这里</a></p>
+    <div fxLayout="row">
+        <div>
+            <img class="img-title" src="../assets/icons/android-chrome-512x512.png" />
+        </div>
+        <div>
+            <h2>明日方舟工具箱</h2>
+            <p>欢迎使用，请在导航栏选择相应功能使用。</p>
+            <p *ngIf="!cn" class="notice"><a href="https://aktoolscn.graueneko.xyz">国内用户请点这里</a></p>
+            <p *ngIf="cn" class="notice"><a href="https://aktools.graueneko.xyz">国际用户请点这里</a></p>
+
+        </div>
+    </div>
     &nbsp;
     <p>Tip: 移动端和平板用户可以将任意页面添加到桌面，获得与本地App相同的使用体验：快速加载，离线使用，自动更新。</p>
     <p>详情请点击右上角<i class="material-icons">help</i>查看。</p>
@@ -36,15 +44,15 @@
             <a href="https://github.com/Evealicemier">水晶泡芙</a>
         </div>
         <div class="contributor" fxLayout="column" fxLayoutAlign="center center">
-          <a href="https://github.com/Luke-lujunxian"><img src="../../assets/img/main/Luke_lu.jpg" /></a>
-          <a href="https://github.com/Luke-lujunxian">Luke_lu</a>
+            <a href="https://github.com/Luke-lujunxian"><img src="../../assets/img/main/Luke_lu.jpg" /></a>
+            <a href="https://github.com/Luke-lujunxian">Luke_lu</a>
         </div>
         <div class="contributor" fxLayout="column" fxLayoutAlign="center center">
-          <a href="https://github.com/bbaa-bbaa"><img src="../../assets/img/main/bbaa.png" /></a>
-          <a href="https://github.com/bbaa-bbaa">bbaa</a>
+            <a href="https://github.com/bbaa-bbaa"><img src="../../assets/img/main/bbaa.png" /></a>
+            <a href="https://github.com/bbaa-bbaa">bbaa</a>
         </div>
     </div>
-    
+
     <h4>建议/需求/加入我们</h4>
     <div class="joinus" fxLayout="row wrap" fxLayoutAlign="start center">
         <div class="contributor" fxLayout="column" fxLayoutAlign="center center">
@@ -59,5 +67,4 @@
     <h4>友情链接</h4>
     <p>欢迎访问 <a href="https://bbs.nga.cn/thread.php?fid=-34587507">NGA明日方舟-罗德岛驻艾泽拉斯大使馆</a></p>
     <p>欢迎向 <a href="https://penguin-stats.io">企鹅物流数据统计</a> 贡献材料掉落信息</p>
-    <p>安卓悬浮工具： <a href="https://github.com/ParticleG/AutonightsToolbox/releases">安卓版方舟工具箱</a></p>
 </div>
