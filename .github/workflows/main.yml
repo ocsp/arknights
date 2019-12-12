@@ -1,0 +1,49 @@
+name: Node CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-github:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 10.15.3
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.15.3"
+      - name: npm install, build, and deploy
+        run: |
+          npm i -s
+          npm install -g @angular/cli
+          ng build --prod --base-href "https://aktools.graueneko.xyz/"
+          npx angular-cli-ghpages --dir=dist/$PROJECT --repo=https://$TOKEN@$REPO --no-silent --cname=$CNAME --email=sczhg@sczhg.info --name="graueneko"
+        env:
+          CI: true
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CNAME: aktools.graueneko.xyz
+          REPO: github.com/graueneko/aktools.git
+          PROJECT: aktools
+  build-coding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 10.15.3
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.15.3"
+      - name: npm install, build, and deploy
+        run: |
+          npm i -s
+          npm install -g @angular/cli
+          ng build --prod --base-href "https://aktoolscn.graueneko.xyz/"
+          npx angular-cli-ghpages --dir=dist/$PROJECT --repo=https://$TOKEN@$REPO --no-silent --cname=$CNAME --email=sczhg@sczhg.info --name="graueneko"
+        env:
+          CI: true
+          TOKEN: ${{ secrets.CODING_TOKEN }}
+          CNAME: aktoolscn.graueneko.xyz
+          REPO: github.com/graueneko/aktools.git
+          PROJECT: aktools
