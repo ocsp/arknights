@@ -58,13 +58,10 @@ export class HrComponent implements OnInit {
         title: '位置', tags: ['远程位', '近战位'],
       },
       {
-        title: '性别', tags: ['男性干员', '女性干员'],
-      },
-      {
         title: '种类', tags: ['先锋干员', '狙击干员', '医疗干员', '术师干员', '近卫干员', '重装干员', '辅助干员', '特种干员'],
       },
       {
-        title: '词缀', tags: ['治疗', '支援', '输出', '群攻', '减速', '生存', '防护', '削弱', '位移', '控场', '爆发', '召唤', '快速复活', '费用回复'],
+        title: '词缀', tags: ['治疗', '支援', '输出', '群攻', '减速', '生存', '防护', '削弱', '位移', '控场', '爆发', '召唤', '快速复活', '费用回复', '支援机械'],
       }
     ];
     this.hrdata.combs = [];
@@ -75,7 +72,6 @@ export class HrComponent implements OnInit {
       for (const char of data) {
         if (char.hidden) { continue; }
         char.tags.push(char.type + '干员');
-        char.tags.push(char.sex + '性干员');
         const name = char.name;
         for (const tag of char.tags) {
           if (tag in this.tags) {
