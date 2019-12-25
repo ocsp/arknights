@@ -40,7 +40,17 @@ export class CharMatMatcardComponent implements OnInit {
       return;
     }
     for (const m of this.innerSMats) {
-      data[this.allmats[m.id].name].need = m.count;
+      if(data[this.allmats[m.id].name]){
+        data[this.allmats[m.id].name].need = m.count;
+      } else {
+        this.snackbar.show({
+          message: '材料有更新，请先打开一次材料计算页面，当前输入不会清空。',
+          actionText: '好的',
+          multiline: false,
+          actionOnBottom: false
+        });
+        return;
+      }
     }
     this.fetch.setLocalStorage('m-data', data);
     this.fetch.setLocalStorage('m-option', {
