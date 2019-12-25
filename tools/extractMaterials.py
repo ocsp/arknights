@@ -1,14 +1,24 @@
+# -*- coding: UTF-8 -*-
+
 import re
 import json
 import requests
 
-# Run this file in the root directory of project
-# e.g. python ./tools/extractMaterials.py
+# 在根目录下执行以下指令:
+# python3 ./tools/extractMaterials.py
+
+
+base = "https://raw.githubusercontent.com/Perfare/ArknightsGameData/master"
+
+# 某次更新后上面所用的数据出现了乱码问题，可以clone到本地后手动修复，此时需要用以下路径
+# base = "/mnt/c/Users/user/source/repos/ArknightsGameData"
 
 def readJson(path):
-    return requests.get("https://raw.githubusercontent.com/Perfare/ArknightsGameData/master"+path).json()
-    
-
+    if base.startswith("http"):
+        return requests.get(base + path).json()
+    else:
+        with open(base + path) as f:
+            return json.load(f, encoding='utf-8')
 
 skillTbl = readJson("/excel/skill_table.json")
 skidToName = {}
